@@ -72,9 +72,13 @@ def _ensure_db():
 # ─────────────────────────────────────────────────────────
 def get_db():
     if 'db' not in g:
-        g.db = sqlite3.connect(DB_PATH)
+        # timeout=30: wait up to 30s if another thread holds the write lock
+        # check_same_thread=False: safe because Flask handles one request per thread
+        g.db = sqlite3.connect(DB_PATH, timeout=30, check_same_thread=False)
         g.db.row_factory = sqlite3.Row
-        g.db.execute("PRAGMA journal_mode=WAL")
+        g.db.execute("PRAGMA journal_mode=WAL")   # WAL allows concurrent reads + 1 writer
+        g.db.execute("PRAGMA synchronous=NORMAL")  # faster writes, still safe
+        g.db.execute("PRAGMA busy_timeout=30000")  # 30s busy wait at SQLite level too
     return g.db
 
 @app.teardown_appcontext
@@ -155,7 +159,9 @@ CREATE TABLE IF NOT EXISTS admin_log (
 """
 
 def init_db():
-    with sqlite3.connect(DB_PATH) as db:
+    with sqlite3.connect(DB_PATH, timeout=30, check_same_thread=False) as db:
+        db.execute("PRAGMA journal_mode=WAL")
+        db.execute("PRAGMA synchronous=NORMAL")
         db.executescript(SCHEMA)
         # Run column migrations for existing databases
         existing_cols = [r[1] for r in db.execute("PRAGMA table_info(bookings)").fetchall()]
