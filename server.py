@@ -691,13 +691,35 @@ def serve_index():
     return send_from_directory(BASE_DIR, 'index.html')
 
 @app.route('/admin')
+@app.route('/admin/')
 def serve_admin():
     return send_from_directory(BASE_DIR, 'admin.html')
 
 @app.route('/<path:path>')
 def serve_static(path):
-    return send_from_directory(BASE_DIR, path)
+    # Prevent accidental exposure of server.py or .db files
+    blocked = ['.py', '.db', '.sqlite', '.env']
+    if any(path.endswith(ext) for ext in blocked):
+        return jsonify({'error': 'Forbidden'}), 403
+    try:
+        return send_from_directory(BASE_DIR, path)
+    except Exception:
+        # SPA fallback — serve index.html for unknown paths
+        return send_from_directory(BASE_DIR, 'index.html')
 
+
+# Health check + debug route
+@app.route('/health')
+def health():
+    import os
+    files = os.listdir(BASE_DIR)
+    return jsonify({
+        'status': 'ok',
+        'base_dir': BASE_DIR,
+        'files': files,
+        'db_path': DB_PATH,
+        'db_exists': os.path.exists(DB_PATH),
+    })
 
 # ─────────────────────────────────────────────────────────
 # ENTRY POINT
