@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ariana Grande — Official Fan Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       NAVIGATION
+  ══════════════════════════════════════════ -->
+  <nav id="navbar">
+
+    <!-- Logo -->
+    <div class="nav-logo">ARIANA GRANDE</div>
+
+    <!-- Desktop nav links -->
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#services" class="nav-link" data-section="services">Services</a></li>
+      <li><a href="#events"   class="nav-link" data-section="events">Events</a></li>
+      <li><a href="#fancard"  class="nav-link" data-section="fancard">Fan Card</a></li>
+    </ul>
+
+    <!-- Desktop currency switcher -->
+    <div class="currency-switcher" id="currencySwitcher">
+      <span class="currency-label">Currency:</span>
+      <div class="currency-tabs" id="currencyTabs">
+        <button class="cur-tab active" data-cur="USD">$ USD</button>
+        <button class="cur-tab"        data-cur="GBP">£ GBP</button>
+        <button class="cur-tab"        data-cur="EUR">€ EUR</button>
+        <button class="cur-tab"        data-cur="CAD">C$ CAD</button>
+        <button class="cur-tab"        data-cur="AUD">A$ AUD</button>
+        <button class="cur-tab"        data-cur="BTC">₿ BTC</button>
+      </div>
+    </div>
+
+    <!-- Mobile right cluster -->
+    <div class="nav-mobile-right">
+      <!-- Mobile currency pill (compact) -->
+      <div class="mob-currency" id="mobCurrency">
+        <button class="mob-cur active" data-cur="USD">$</button>
+        <button class="mob-cur"        data-cur="GBP">£</button>
+        <button class="mob-cur"        data-cur="EUR">€</button>
+        <button class="mob-cur"        data-cur="CAD">C$</button>
+        <button class="mob-cur"        data-cur="AUD">A$</button>
+        <button class="mob-cur"        data-cur="BTC">₿</button>
+      </div>
+      <!-- Hamburger -->
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span class="ham-line"></span>
+        <span class="ham-line"></span>
+        <span class="ham-line"></span>
+      </button>
+    </div>
+
+  </nav>
+
+  <!-- Mobile drawer -->
+  <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+    <div class="drawer-inner">
+      <ul class="drawer-links">
+        <li><a href="#services" class="drawer-link" data-section="services">Services</a></li>
+        <li><a href="#events"   class="drawer-link" data-section="events">Events</a></li>
+        <li><a href="#fancard"  class="drawer-link" data-section="fancard">Fan Card</a></li>
+      </ul>
+      <div class="drawer-divider"></div>
+      <div class="drawer-section-label">Currency</div>
+      <div class="drawer-currency">
+        <button class="drawer-cur active" data-cur="USD">$ USD</button>
+        <button class="drawer-cur"        data-cur="GBP">£ GBP</button>
+        <button class="drawer-cur"        data-cur="EUR">€ EUR</button>
+        <button class="drawer-cur"        data-cur="CAD">C$ CAD</button>
+        <button class="drawer-cur"        data-cur="AUD">A$ AUD</button>
+        <button class="drawer-cur"        data-cur="BTC">₿ BTC</button>
+      </div>
+      <div class="drawer-divider"></div>
+      <button class="btn-primary drawer-cta" data-modal="tickets">Book Tickets</button>
+    </div>
+  </div>
+  <!-- Drawer overlay -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+
+
+  <!-- ══════════════════════════════════════════
+       HERO
+  ══════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-silhouette"></div>
+    <div class="hero-content">
+      <p class="hero-tag">Official Fan Portal · Est. 2019</p>
+      <h1 class="hero-name">ARIANA GRANDE<span>Official</span></h1>
+      <p class="hero-desc">Your exclusive gateway to shows, movie screenings, meet &amp; greets, and official fan membership — all in one place.</p>
+      <div class="hero-cta">
+        <button class="btn-primary" data-modal="tickets">Book Tickets</button>
+        <button class="btn-outline"  data-scroll="services">Explore Services</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+       SERVICES
+  ══════════════════════════════════════════ -->
+  <section id="services">
+    <p class="section-label">What We Offer</p>
+    <h2 class="section-title">Fan Experiences</h2>
+    <p class="section-sub">From live show seats to personal meet-and-greets, every interaction with Ariana Grande is an event worth remembering.</p>
+
+    <div class="services-grid">
+
+      <div class="service-card" data-modal="tickets">
+        <div class="service-icon">🎬</div>
+        <h3 class="service-title">Show &amp; Movie Tickets</h3>
+        <p class="service-desc">Reserve premium seats for Ariana Grande's live concerts, TV show tapings, and exclusive movie premiere screenings.</p>
+        <p class="service-price" data-base="30" data-label="per seat">From <span class="price-display">$30</span> / seat</p>
+      </div>
+
+      <div class="service-card" data-modal="meetgreet">
+        <div class="service-icon">🤝</div>
+        <h3 class="service-title">Meet &amp; Greet</h3>
+        <p class="service-desc">An intimate one-on-one experience. Get photos, autographs, and a personal conversation with Ariana backstage.</p>
+        <p class="service-price" data-base="150" data-label="per person">From <span class="price-display">$150</span> / person</p>
+      </div>
+
+      <div class="service-card" data-modal="fancard">
+        <div class="service-icon">💳</div>
+        <h3 class="service-title">Fan Membership Card</h3>
+        <p class="service-desc">Join the Official Ariana Grande Fan Club. Get early ticket access, exclusive merch discounts, and members-only content.</p>
+        <p class="service-price" data-base="10" data-label="per year">From <span class="price-display">$10</span> / year</p>
+      </div>
+
+      <div class="service-card" data-modal="vip">
+        <div class="service-icon">⭐</div>
+        <h3 class="service-title">VIP Experience Package</h3>
+        <p class="service-desc">The ultimate fan package — front-row seats, backstage tour, meet &amp; greet, signed merch, and afterparty access.</p>
+        <p class="service-price" data-base="450" data-label="per person">From <span class="price-display">$450</span> / person</p>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+       EVENTS
+  ══════════════════════════════════════════ -->
+  <section id="events" class="section-dark">
+    <p class="section-label">Upcoming</p>
+    <h2 class="section-title">Events Calendar</h2>
+    <p class="section-sub">Don't miss Ariana Grande's upcoming shows, premieres, and fan events. Limited seats — book early.</p>
+
+    <div class="events-list">
+
+      <div class="event-item">
+        <div class="event-date">
+          <span class="event-month">Jun</span>
+          <span class="event-day">14</span>
+        </div>
+        <div class="event-info">
+          <h3 class="event-name">The Nightfall Tour — Lagos</h3>
+          <p class="event-location">Eko Convention Centre · Lagos, Nigeria</p>
+        </div>
+        <span class="event-badge">Concert</span>
+      </div>
+
+      <div class="event-item">
+        <div class="event-date">
+          <span class="event-month">Jun</span>
+          <span class="event-day">22</span>
+        </div>
+        <div class="event-info">
+          <h3 class="event-name">Echoes — Film Premiere</h3>
+          <p class="event-location">Genesis Deluxe Cinemas · Abuja, Nigeria</p>
+        </div>
+        <span class="event-badge">Movie Premiere</span>
+      </div>
+
+      <div class="event-item">
+        <div class="event-date">
+          <span class="event-month">Jul</span>
+          <span class="event-day">05</span>
+        </div>
+        <div class="event-info">
+          <h3 class="event-name">Fans First — Meet &amp; Greet Session</h3>
+          <p class="event-location">Oriental Hotel · Lagos, Nigeria</p>
+        </div>
+        <span class="event-badge">Meet &amp; Greet</span>
+      </div>
+
+      <div class="event-item">
+        <div class="event-date">
+          <span class="event-month">Jul</span>
+          <span class="event-day">19</span>
+        </div>
+        <div class="event-info">
+          <h3 class="event-name">The Nightfall Tour — Accra</h3>
+          <p class="event-location">Accra International Conference Centre · Ghana</p>
+        </div>
+        <span class="event-badge">Concert</span>
+      </div>
+
+      <div class="event-item">
+        <div class="event-date">
+          <span class="event-month">Aug</span>
+          <span class="event-day">03</span>
+        </div>
+        <div class="event-info">
+          <h3 class="event-name">Ariana Grande LIVE — TV Show Taping</h3>
+          <p class="event-location">EbonyLife Studios · Lagos, Nigeria</p>
+        </div>
+        <span class="event-badge">TV Show</span>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+       FAN CARD
+  ══════════════════════════════════════════ -->
+  <section id="fancard">
+    <p class="section-label">Membership</p>
+    <h2 class="section-title">Fan Card</h2>
+
+    <div class="fancard-layout">
+
+      <div class="fancard-left">
+        <p class="section-sub">Join thousands of official Ariana Grande fans. Your fan card unlocks priority bookings, exclusive content, and members-only perks all year round.</p>
+
+        <div class="tier-options">
+          <div class="tier-option active" data-tier="SILVER" data-price="10">
+            <div>
+              <div class="tier-name">Silver Fan</div>
+              <div class="tier-perks">Early ticket access · 10% merch discount</div>
+            </div>
+            <div class="tier-price" data-base="10"><span class="price-display">$10</span> / yr</div>
+          </div>
+          <div class="tier-option" data-tier="GOLD" data-price="24">
+            <div>
+              <div class="tier-name">Gold Fan</div>
+              <div class="tier-perks">All Silver perks · Signed photo · Newsletter</div>
+            </div>
+            <div class="tier-price" data-base="24"><span class="price-display">$24</span> / yr</div>
+          </div>
+          <div class="tier-option" data-tier="PLATINUM" data-price="50">
+            <div>
+              <div class="tier-name">Platinum Fan</div>
+              <div class="tier-perks">All Gold perks · M&amp;G priority · VIP discounts</div>
+            </div>
+            <div class="tier-price" data-base="50"><span class="price-display">$50</span> / yr</div>
+          </div>
+        </div>
+
+        <button class="btn-primary" data-modal="fancard">Apply for Fan Card</button>
+      </div>
+
+      <!-- Live card preview -->
+      <div class="fancard-right">
+        <div class="fan-card-preview" id="cardPreview">
+          <div class="fan-card-logo">ARIANA GRANDE</div>
+          <div class="fan-card-tier" id="cardTier">SILVER</div>
+          <div class="fan-card-name">
+            <div class="fan-card-holder" id="cardHolder">YOUR NAME</div>
+            <div class="fan-card-id">FAN · #AG-XXXXX</div>
+          </div>
+          <div class="fan-card-strip"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════ -->
+  <footer>
+    <div class="footer-logo">ARIANA GRANDE</div>
+    <ul class="footer-links">
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">Twitter/X</a></li>
+      <li><a href="#">TikTok</a></li>
+      <li><a href="#">Contact</a></li>
+      <li><a href="#">Terms</a></li>
+    </ul>
+    <p class="footer-copy">© 2026 ARIANA GRANDE Official. All rights reserved. This is a fan portal for official bookings and membership.</p>
+  </footer>
+
+
+  <!-- ══════════════════════════════════════════
+       MODALS
+  ══════════════════════════════════════════ -->
+
+  <!-- ── Tickets Modal ── -->
+  <div class="modal-overlay" id="modal-tickets" data-modal-id="tickets">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="section-label">Book Now</div>
+          <h2 class="modal-title">Show &amp; Movie Tickets</h2>
+        </div>
+        <button class="modal-close" data-close="tickets">✕</button>
+      </div>
+
+      <div class="modal-body" id="ticketForm">
+        <div class="form-row">
+          <div class="field"><label>First Name</label><input type="text" id="t-fname" placeholder="Ada"></div>
+          <div class="field"><label>Last Name</label><input type="text" id="t-lname" placeholder="Okafor"></div>
+        </div>
+        <div class="form-row single">
+          <div class="field"><label>Email Address</label><input type="email" id="t-email" placeholder="ada@email.com"></div>
+        </div>
+        <div class="form-row single">
+          <div class="field">
+            <label>Select Event</label>
+            <select id="t-event">
+              <option value="30">Nightfall Tour — Lagos ($30/seat)</option>
+              <option value="25">Echoes Film Premiere — Abuja ($25/seat)</option>
+              <option value="150">Meet &amp; Greet Session ($150/person)</option>
+              <option value="35">Nightfall Tour — Accra ($35/seat)</option>
+              <option value="20">Ariana Grande LIVE TV Taping ($20/seat)</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Number of Tickets</label>
+          <div class="tickets-counter">
+            <button class="counter-btn" id="t-minus">−</button>
+            <input  class="counter-val" id="t-qty" value="1" readonly>
+            <button class="counter-btn" id="t-plus">+</button>
+          </div>
+        </div>
+
+        <div class="order-summary">
+          <div class="modal-currency-bar">
+            <span class="modal-currency-label">Currency</span>
+            <div class="modal-currency-tabs">
+              <button class="modal-cur active" data-cur="USD">$ USD</button>
+              <button class="modal-cur" data-cur="GBP">£ GBP</button>
+              <button class="modal-cur" data-cur="EUR">€ EUR</button>
+              <button class="modal-cur" data-cur="CAD">C$ CAD</button>
+              <button class="modal-cur" data-cur="AUD">A$ AUD</button>
+              <button class="modal-cur" data-cur="BTC">₿ BTC</button>
+            </div>
+          </div>
+          <div class="order-row"><span>Ticket price</span><span id="t-unit">$30.00</span></div>
+          <div class="order-row"><span>Quantity</span><span id="t-qty-display">× 1</span></div>
+          <div class="order-row"><span>Service fee</span><span id="t-fee">$1.00</span></div>
+          <div class="order-row total"><span>Total</span><span id="t-total">$31.00</span></div>
+        </div>
+
+        <div class="payment-section">
+          <p class="payment-title">Payment Method</p>
+          <div class="payment-methods">
+            <button class="pay-method active" data-method="card">&#x1F4B3; Card</button>
+            <button class="pay-method" data-method="bank">&#x1F3E6; Bank Transfer</button>
+            <button class="pay-method" data-method="bitcoin">&#x20BF; Bitcoin</button>
+            <button class="pay-method" data-method="paystack">&#x26A1; Paystack</button>
+          </div>
+          <div class="pay-panel-card">
+            <div class="card-type-selector">
+              <button class="card-type active" data-card="visa">
+                <span class="ctype-logo visa-logo">VISA</span>
+              </button>
+              <button class="card-type" data-card="mastercard">
+                <span class="ctype-logo mc-logo">MC</span>
+              </button>
+              <button class="card-type" data-card="amex">
+                <span class="ctype-logo amex-logo">AMEX</span>
+              </button>
+              <button class="card-type" data-card="verve">
+                <span class="ctype-logo verve-logo">VERVE</span>
+              </button>
+            </div>
+            <div class="card-holder-indicator">
+              <span class="chip-icon">▬▬</span>
+              <span class="selected-card-name">Visa Card</span>
+            </div>
+            <div class="form-row single">
+              <div class="field">
+                <label>Cardholder Name</label>
+                <input type="text" class="card-holder-name" placeholder="Name on card" autocomplete="cc-name">
+              </div>
+            </div>
+            <div class="form-row single">
+              <div class="field">
+                <label>Card Number</label>
+                <div class="card-num-wrap">
+                  <input type="text" class="card-num" placeholder="0000  0000  0000  0000" maxlength="19" autocomplete="cc-number" inputmode="numeric">
+                  <span class="card-num-brand"></span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label>Expiry Date</label>
+                <input type="text" class="card-expiry" placeholder="MM / YY" maxlength="7" autocomplete="cc-exp" inputmode="numeric">
+              </div>
+              <div class="field">
+                <label>CVV / CVC</label>
+                <div class="cvv-wrap">
+                  <input type="text" class="card-cvv" placeholder="•••" maxlength="4" autocomplete="cc-csc" inputmode="numeric">
+                  <span class="cvv-hint">?<span class="cvv-tooltip">3 digits on back of card. Amex: 4 digits on front.</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pay-panel-bank" style="display:none">
+            <div class="bank-details-loading">Loading bank details...</div>
+          </div>
+          <div class="pay-panel-bitcoin" style="display:none">
+            <div class="btc-header">
+              <span class="btc-icon-big">&#x20BF;</span>
+              <div>
+                <div class="btc-title">Bitcoin Payment</div>
+                <div class="btc-subtitle">Send the exact BTC amount to the address below</div>
+              </div>
+            </div>
+            <div class="btc-wallet-block">
+              <div class="btc-wallet-label">BTC Wallet Address</div>
+              <div class="btc-address-box">
+                <span class="btc-address">Loading...</span>
+                <button class="btc-copy-btn" title="Copy address" type="button">Copy</button>
+              </div>
+              <div class="btc-copied" style="display:none">Copied to clipboard!</div>
+            </div>
+            <div class="btc-amount-block">
+              <div class="btc-wallet-label">Exact Amount to Send</div>
+              <div class="btc-amount-display" id="t-btc-amount">Calculating...</div>
+            </div>
+            <div class="btc-instructions">
+              <div class="btc-step"><span class="btc-step-n">1</span>Copy the wallet address above</div>
+              <div class="btc-step"><span class="btc-step-n">2</span>Open your Bitcoin wallet app</div>
+              <div class="btc-step"><span class="btc-step-n">3</span>Send the exact BTC amount shown</div>
+              <div class="btc-step"><span class="btc-step-n">4</span>Click Confirm below — we verify on-chain</div>
+            </div>
+            <div class="btc-note">Confirmed after 1 network confirmation (~10 min). Contact support@arianagrande.com for issues.</div>
+          </div>
+          <div class="pay-panel-paystack" style="display:none">
+            <div class="paystack-info">
+              <div class="paystack-logo">&#x26A1; Paystack</div>
+              <p class="paystack-desc">You will be redirected to Paystack secure checkout to complete your payment.</p>
+              <div class="paystack-badges">
+                <span class="ps-badge">Secure</span>
+                <span class="ps-badge">Instant</span>
+                <span class="ps-badge">Verified</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="submit-btn" data-submit="tickets" data-form="ticketForm">Pay &amp; Confirm Booking</button>
+      </div>
+
+      <div class="success-screen" id="tickets-success">
+        <div class="success-icon">✓</div>
+        <h2 class="success-title">Booking Confirmed!</h2>
+        <p class="booking-ref" style="font-family:'Courier New',monospace;font-size:13px;color:var(--gold);margin-bottom:8px;letter-spacing:.1em"></p>
+        <p class="success-msg">Your tickets have been booked. Check your email for your e-tickets and booking reference. See you at the show!</p>
+        <button class="btn-primary" data-close="tickets">Done</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── Meet & Greet Modal ── -->
+  <div class="modal-overlay" id="modal-meetgreet" data-modal-id="meetgreet">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="section-label">Exclusive Experience</div>
+          <h2 class="modal-title">Meet &amp; Greet</h2>
+        </div>
+        <button class="modal-close" data-close="meetgreet">✕</button>
+      </div>
+
+      <div class="modal-body" id="meetgreetForm">
+        <div class="form-row">
+          <div class="field"><label>First Name</label><input type="text" placeholder="Chidi"></div>
+          <div class="field"><label>Last Name</label><input type="text" placeholder="Eze"></div>
+        </div>
+        <div class="form-row single">
+          <div class="field"><label>Email Address</label><input type="email" placeholder="chidi@email.com"></div>
+        </div>
+        <div class="form-row single">
+          <div class="field">
+            <label>Session Date</label>
+            <select>
+              <option>July 5, 2026 — Lagos</option>
+              <option>August 10, 2026 — Abuja</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Choose a Time Slot</label>
+          <div class="slot-grid">
+            <div class="time-slot booked">10:00 AM<br><small>Full</small></div>
+            <div class="time-slot">11:00 AM</div>
+            <div class="time-slot">11:30 AM</div>
+            <div class="time-slot">12:00 PM</div>
+            <div class="time-slot booked">12:30 PM<br><small>Full</small></div>
+            <div class="time-slot">2:00 PM</div>
+            <div class="time-slot">2:30 PM</div>
+            <div class="time-slot">3:00 PM</div>
+            <div class="time-slot">3:30 PM</div>
+          </div>
+        </div>
+        <div class="form-row single" style="margin-top:16px">
+          <div class="field">
+            <label>Your Message to Ariana (Optional)</label>
+            <textarea placeholder="Something you'd love to say..."></textarea>
+          </div>
+        </div>
+
+        <div class="order-summary">
+          <div class="modal-currency-bar">
+            <span class="modal-currency-label">Currency</span>
+            <div class="modal-currency-tabs">
+              <button class="modal-cur active" data-cur="USD">$ USD</button>
+              <button class="modal-cur" data-cur="GBP">£ GBP</button>
+              <button class="modal-cur" data-cur="EUR">€ EUR</button>
+              <button class="modal-cur" data-cur="CAD">C$ CAD</button>
+              <button class="modal-cur" data-cur="AUD">A$ AUD</button>
+              <button class="modal-cur" data-cur="BTC">₿ BTC</button>
+            </div>
+          </div>
+          <div class="order-row"><span>Meet &amp; Greet session</span><span id="mg-base">$150.00</span></div>
+          <div class="order-row"><span>Photo print included</span><span>Free</span></div>
+          <div class="order-row"><span>Service fee</span><span id="mg-fee">$2.00</span></div>
+          <div class="order-row total"><span>Total</span><span id="mg-total">$152.00</span></div>
+        </div>
+
+        <div class="payment-section">
+          <p class="payment-title">Payment Method</p>
+          <div class="payment-methods">
+            <button class="pay-method active" data-method="card">&#x1F4B3; Card</button>
+            <button class="pay-method" data-method="bank">&#x1F3E6; Bank Transfer</button>
+            <button class="pay-method" data-method="bitcoin">&#x20BF; Bitcoin</button>
+            <button class="pay-method" data-method="paystack">&#x26A1; Paystack</button>
+          </div>
+          <div class="pay-panel-card">
+            <div class="card-type-selector">
+              <button class="card-type active" data-card="visa">
+                <span class="ctype-logo visa-logo">VISA</span>
+              </button>
+              <button class="card-type" data-card="mastercard">
+                <span class="ctype-logo mc-logo">MC</span>
+              </button>
+              <button class="card-type" data-card="amex">
+                <span class="ctype-logo amex-logo">AMEX</span>
+              </button>
+              <button class="card-type" data-card="verve">
+                <span class="ctype-logo verve-logo">VERVE</span>
+              </button>
+            </div>
+            <div class="card-holder-indicator">
+              <span class="chip-icon">▬▬</span>
+              <span class="selected-card-name">Visa Card</span>
+            </div>
+            <div class="form-row single">
+              <div class="field">
+                <label>Cardholder Name</label>
+                <input type="text" class="card-holder-name" placeholder="Name on card" autocomplete="cc-name">
+              </div>
+            </div>
+            <div class="form-row single">
+              <div class="field">
+                <label>Card Number</label>
+                <div class="card-num-wrap">
+                  <input type="text" class="card-num" placeholder="0000  0000  0000  0000" maxlength="19" autocomplete="cc-number" inputmode="numeric">
+                  <span class="card-num-brand"></span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label>Expiry Date</label>
+                <input type="text" class="card-expiry" placeholder="MM / YY" maxlength="7" autocomplete="cc-exp" inputmode="numeric">
+              </div>
+              <div class="field">
+                <label>CVV / CVC</label>
+                <div class="cvv-wrap">
+                  <input type="text" class="card-cvv" placeholder="•••" maxlength="4" autocomplete="cc-csc" inputmode="numeric">
+                  <span class="cvv-hint">?<span class="cvv-tooltip">3 digits on back of card. Amex: 4 digits on front.</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pay-panel-bank" style="display:none">
+            <div class="bank-details-loading">Loading bank details...</div>
+          </div>
+          <div class="pay-panel-bitcoin" style="display:none">
+            <div class="btc-header">
+              <span class="btc-icon-big">&#x20BF;</span>
+              <div>
+                <div class="btc-title">Bitcoin Payment</div>
+                <div class="btc-subtitle">Send the exact BTC amount to the address below</div>
+              </div>
+            </div>
+            <div class="btc-wallet-block">
+              <div class="btc-wallet-label">BTC Wallet Address</div>
+              <div class="btc-address-box">
+                <span class="btc-address">Loading...</span>
+                <button class="btc-copy-btn" title="Copy address" type="button">Copy</button>
+              </div>
+              <div class="btc-copied" style="display:none">Copied to clipboard!</div>
+            </div>
+            <div class="btc-amount-block">
+              <div class="btc-wallet-label">Exact Amount to Send</div>
+              <div class="btc-amount-display" id="mg-btc-amount">Calculating...</div>
+            </div>
+            <div class="btc-instructions">
+              <div class="btc-step"><span class="btc-step-n">1</span>Copy the wallet address above</div>
+              <div class="btc-step"><span class="btc-step-n">2</span>Open your Bitcoin wallet app</div>
+              <div class="btc-step"><span class="btc-step-n">3</span>Send the exact BTC amount shown</div>
+              <div class="btc-step"><span class="btc-step-n">4</span>Click Confirm below — we verify on-chain</div>
+            </div>
+            <div class="btc-note">Confirmed after 1 network confirmation (~10 min). Contact support@arianagrande.com for issues.</div>
+          </div>
+          <div class="pay-panel-paystack" style="display:none">
+            <div class="paystack-info">
+              <div class="paystack-logo">&#x26A1; Paystack</div>
+              <p class="paystack-desc">You will be redirected to Paystack secure checkout to complete your payment.</p>
+              <div class="paystack-badges">
+                <span class="ps-badge">Secure</span>
+                <span class="ps-badge">Instant</span>
+                <span class="ps-badge">Verified</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="submit-btn" data-submit="meetgreet" data-form="meetgreetForm">Pay &amp; Reserve Slot</button>
+      </div>
+
+      <div class="success-screen" id="meetgreet-success">
+        <div class="success-icon">✓</div>
+        <h2 class="success-title">Slot Reserved!</h2>
+        <p class="booking-ref" style="font-family:'Courier New',monospace;font-size:13px;color:var(--gold);margin-bottom:8px;letter-spacing:.1em"></p>
+        <p class="success-msg">Your meet &amp; greet slot is confirmed. You'll receive a confirmation email with arrival instructions and what to expect on the day.</p>
+        <button class="btn-primary" data-close="meetgreet">Done</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── Fan Card Modal ── -->
+  <div class="modal-overlay" id="modal-fancard" data-modal-id="fancard">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="section-label">Membership</div>
+          <h2 class="modal-title">Fan Card Application</h2>
+        </div>
+        <button class="modal-close" data-close="fancard">✕</button>
+      </div>
+
+      <div class="modal-body" id="fancardForm">
+        <div class="form-row">
+          <div class="field"><label>First Name</label><input type="text" id="fc-fname" placeholder="Amara"></div>
+          <div class="field"><label>Last Name</label><input type="text" id="fc-lname" placeholder="Bello"></div>
+        </div>
+        <div class="form-row single">
+          <div class="field"><label>Email Address</label><input type="email" placeholder="amara@email.com"></div>
+        </div>
+        <div class="form-row single">
+          <div class="field"><label>Date of Birth</label><input type="date"></div>
+        </div>
+        <div class="form-row single">
+          <div class="field">
+            <label>Membership Tier</label>
+            <select id="fc-tier">
+              <option value="SILVER" data-price="10">Silver Fan — $10/year</option>
+              <option value="GOLD"   data-price="24">Gold Fan — $24/year</option>
+              <option value="PLATINUM" data-price="50">Platinum Fan — $50/year</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="order-summary" id="fc-summary">
+          <div class="modal-currency-bar">
+            <span class="modal-currency-label">Currency</span>
+            <div class="modal-currency-tabs">
+              <button class="modal-cur active" data-cur="USD">$ USD</button>
+              <button class="modal-cur" data-cur="GBP">£ GBP</button>
+              <button class="modal-cur" data-cur="EUR">€ EUR</button>
+              <button class="modal-cur" data-cur="CAD">C$ CAD</button>
+              <button class="modal-cur" data-cur="AUD">A$ AUD</button>
+              <button class="modal-cur" data-cur="BTC">₿ BTC</button>
+            </div>
+          </div>
+          <div class="order-row"><span>Silver Fan Membership</span><span id="fc-base">$10.00</span></div>
+          <div class="order-row"><span>Physical card delivery</span><span id="fc-delivery">$1.00</span></div>
+          <div class="order-row total"><span>Total</span><span id="fc-total">$11.00</span></div>
+        </div>
+
+        <div class="payment-section">
+          <p class="payment-title">Payment Method</p>
+          <div class="payment-methods">
+            <button class="pay-method active" data-method="card">&#x1F4B3; Card</button>
+            <button class="pay-method" data-method="bank">&#x1F3E6; Bank Transfer</button>
+            <button class="pay-method" data-method="bitcoin">&#x20BF; Bitcoin</button>
+            <button class="pay-method" data-method="paystack">&#x26A1; Paystack</button>
+          </div>
+          <div class="pay-panel-card">
+            <div class="card-type-selector">
+              <button class="card-type active" data-card="visa">
+                <span class="ctype-logo visa-logo">VISA</span>
+              </button>
+              <button class="card-type" data-card="mastercard">
+                <span class="ctype-logo mc-logo">MC</span>
+              </button>
+              <button class="card-type" data-card="amex">
+                <span class="ctype-logo amex-logo">AMEX</span>
+              </button>
+              <button class="card-type" data-card="verve">
+                <span class="ctype-logo verve-logo">VERVE</span>
+              </button>
+            </div>
+            <div class="card-holder-indicator">
+              <span class="chip-icon">▬▬</span>
+              <span class="selected-card-name">Visa Card</span>
+            </div>
+            <div class="form-row single">
+              <div class="field">
+                <label>Cardholder Name</label>
+                <input type="text" class="card-holder-name" placeholder="Name on card" autocomplete="cc-name">
+              </div>
+            </div>
+            <div class="form-row single">
+              <div class="field">
+                <label>Card Number</label>
+                <div class="card-num-wrap">
+                  <input type="text" class="card-num" placeholder="0000  0000  0000  0000" maxlength="19" autocomplete="cc-number" inputmode="numeric">
+                  <span class="card-num-brand"></span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label>Expiry Date</label>
+                <input type="text" class="card-expiry" placeholder="MM / YY" maxlength="7" autocomplete="cc-exp" inputmode="numeric">
+              </div>
+              <div class="field">
+                <label>CVV / CVC</label>
+                <div class="cvv-wrap">
+                  <input type="text" class="card-cvv" placeholder="•••" maxlength="4" autocomplete="cc-csc" inputmode="numeric">
+                  <span class="cvv-hint">?<span class="cvv-tooltip">3 digits on back of card. Amex: 4 digits on front.</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pay-panel-bank" style="display:none">
+            <div class="bank-details-loading">Loading bank details...</div>
+          </div>
+          <div class="pay-panel-bitcoin" style="display:none">
+            <div class="btc-header">
+              <span class="btc-icon-big">&#x20BF;</span>
+              <div>
+                <div class="btc-title">Bitcoin Payment</div>
+                <div class="btc-subtitle">Send the exact BTC amount to the address below</div>
+              </div>
+            </div>
+            <div class="btc-wallet-block">
+              <div class="btc-wallet-label">BTC Wallet Address</div>
+              <div class="btc-address-box">
+                <span class="btc-address">Loading...</span>
+                <button class="btc-copy-btn" title="Copy address" type="button">Copy</button>
+              </div>
+              <div class="btc-copied" style="display:none">Copied to clipboard!</div>
+            </div>
+            <div class="btc-amount-block">
+              <div class="btc-wallet-label">Exact Amount to Send</div>
+              <div class="btc-amount-display" id="fc-btc-amount">Calculating...</div>
+            </div>
+            <div class="btc-instructions">
+              <div class="btc-step"><span class="btc-step-n">1</span>Copy the wallet address above</div>
+              <div class="btc-step"><span class="btc-step-n">2</span>Open your Bitcoin wallet app</div>
+              <div class="btc-step"><span class="btc-step-n">3</span>Send the exact BTC amount shown</div>
+              <div class="btc-step"><span class="btc-step-n">4</span>Click Confirm below — we verify on-chain</div>
+            </div>
+            <div class="btc-note">Confirmed after 1 network confirmation (~10 min). Contact support@arianagrande.com for issues.</div>
+          </div>
+          <div class="pay-panel-paystack" style="display:none">
+            <div class="paystack-info">
+              <div class="paystack-logo">&#x26A1; Paystack</div>
+              <p class="paystack-desc">You will be redirected to Paystack secure checkout to complete your payment.</p>
+              <div class="paystack-badges">
+                <span class="ps-badge">Secure</span>
+                <span class="ps-badge">Instant</span>
+                <span class="ps-badge">Verified</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="submit-btn" data-submit="fancard" data-form="fancardForm">Apply &amp; Pay</button>
+      </div>
+
+      <div class="success-screen" id="fancard-success">
+        <div class="success-icon">✓</div>
+        <h2 class="success-title">Welcome to the Club!</h2>
+        <p class="booking-ref" style="font-family:'Courier New',monospace;font-size:13px;color:var(--gold);margin-bottom:8px;letter-spacing:.1em"></p>
+        <p class="success-msg">You're now an official Ariana Grande fan member. Your digital fan card will arrive in your email within 24 hours, and your physical card will be shipped in 5–7 business days.</p>
+        <button class="btn-primary" data-close="fancard">Done</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── VIP Modal ── -->
+  <div class="modal-overlay" id="modal-vip" data-modal-id="vip">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="section-label">Ultimate Package</div>
+          <h2 class="modal-title">VIP Experience</h2>
+        </div>
+        <button class="modal-close" data-close="vip">✕</button>
+      </div>
+
+      <div class="modal-body" id="vipForm">
+        <div class="form-row">
+          <div class="field"><label>First Name</label><input type="text" placeholder="Tunde"></div>
+          <div class="field"><label>Last Name</label><input type="text" placeholder="Adeyemi"></div>
+        </div>
+        <div class="form-row single">
+          <div class="field"><label>Email Address</label><input type="email" placeholder="tunde@email.com"></div>
+        </div>
+        <div class="form-row single">
+          <div class="field"><label>Phone Number</label><input type="tel" placeholder="+1 000 000 0000"></div>
+        </div>
+        <div class="form-row single">
+          <div class="field">
+            <label>Select Event</label>
+            <select>
+              <option>Nightfall Tour — Lagos, June 14</option>
+              <option>Nightfall Tour — Accra, July 19</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Number of VIP Packages</label>
+          <div class="tickets-counter">
+            <button class="counter-btn" id="v-minus">−</button>
+            <input  class="counter-val" id="v-qty" value="1" readonly>
+            <button class="counter-btn" id="v-plus">+</button>
+          </div>
+        </div>
+
+        <div class="order-summary">
+          <div class="modal-currency-bar">
+            <span class="modal-currency-label">Currency</span>
+            <div class="modal-currency-tabs">
+              <button class="modal-cur active" data-cur="USD">$ USD</button>
+              <button class="modal-cur" data-cur="GBP">£ GBP</button>
+              <button class="modal-cur" data-cur="EUR">€ EUR</button>
+              <button class="modal-cur" data-cur="CAD">C$ CAD</button>
+              <button class="modal-cur" data-cur="AUD">A$ AUD</button>
+              <button class="modal-cur" data-cur="BTC">₿ BTC</button>
+            </div>
+          </div>
+          <div class="order-row"><span>Front-row seats</span><span>Included</span></div>
+          <div class="order-row"><span>Backstage tour + Meet &amp; Greet</span><span>Included</span></div>
+          <div class="order-row"><span>Signed merchandise pack</span><span>Included</span></div>
+          <div class="order-row"><span>Afterparty access</span><span>Included</span></div>
+          <div class="order-row"><span>VIP Package × <span id="v-qty-display">1</span></span><span id="v-unit">$450.00</span></div>
+          <div class="order-row total"><span>Total</span><span id="v-total">$450.00</span></div>
+        </div>
+
+        <div class="payment-section">
+          <p class="payment-title">Payment Method</p>
+          <div class="payment-methods">
+            <button class="pay-method active" data-method="card">&#x1F4B3; Card</button>
+            <button class="pay-method" data-method="bank">&#x1F3E6; Bank Transfer</button>
+            <button class="pay-method" data-method="bitcoin">&#x20BF; Bitcoin</button>
+            <button class="pay-method" data-method="paystack">&#x26A1; Paystack</button>
+          </div>
+          <div class="pay-panel-card">
+            <div class="card-type-selector">
+              <button class="card-type active" data-card="visa">
+                <span class="ctype-logo visa-logo">VISA</span>
+              </button>
+              <button class="card-type" data-card="mastercard">
+                <span class="ctype-logo mc-logo">MC</span>
+              </button>
+              <button class="card-type" data-card="amex">
+                <span class="ctype-logo amex-logo">AMEX</span>
+              </button>
+              <button class="card-type" data-card="verve">
+                <span class="ctype-logo verve-logo">VERVE</span>
+              </button>
+            </div>
+            <div class="card-holder-indicator">
+              <span class="chip-icon">▬▬</span>
+              <span class="selected-card-name">Visa Card</span>
+            </div>
+            <div class="form-row single">
+              <div class="field">
+                <label>Cardholder Name</label>
+                <input type="text" class="card-holder-name" placeholder="Name on card" autocomplete="cc-name">
+              </div>
+            </div>
+            <div class="form-row single">
+              <div class="field">
+                <label>Card Number</label>
+                <div class="card-num-wrap">
+                  <input type="text" class="card-num" placeholder="0000  0000  0000  0000" maxlength="19" autocomplete="cc-number" inputmode="numeric">
+                  <span class="card-num-brand"></span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label>Expiry Date</label>
+                <input type="text" class="card-expiry" placeholder="MM / YY" maxlength="7" autocomplete="cc-exp" inputmode="numeric">
+              </div>
+              <div class="field">
+                <label>CVV / CVC</label>
+                <div class="cvv-wrap">
+                  <input type="text" class="card-cvv" placeholder="•••" maxlength="4" autocomplete="cc-csc" inputmode="numeric">
+                  <span class="cvv-hint">?<span class="cvv-tooltip">3 digits on back of card. Amex: 4 digits on front.</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pay-panel-bank" style="display:none">
+            <div class="bank-details-loading">Loading bank details...</div>
+          </div>
+          <div class="pay-panel-bitcoin" style="display:none">
+            <div class="btc-header">
+              <span class="btc-icon-big">&#x20BF;</span>
+              <div>
+                <div class="btc-title">Bitcoin Payment</div>
+                <div class="btc-subtitle">Send the exact BTC amount to the address below</div>
+              </div>
+            </div>
+            <div class="btc-wallet-block">
+              <div class="btc-wallet-label">BTC Wallet Address</div>
+              <div class="btc-address-box">
+                <span class="btc-address">Loading...</span>
+                <button class="btc-copy-btn" title="Copy address" type="button">Copy</button>
+              </div>
+              <div class="btc-copied" style="display:none">Copied to clipboard!</div>
+            </div>
+            <div class="btc-amount-block">
+              <div class="btc-wallet-label">Exact Amount to Send</div>
+              <div class="btc-amount-display" id="v-btc-amount">Calculating...</div>
+            </div>
+            <div class="btc-instructions">
+              <div class="btc-step"><span class="btc-step-n">1</span>Copy the wallet address above</div>
+              <div class="btc-step"><span class="btc-step-n">2</span>Open your Bitcoin wallet app</div>
+              <div class="btc-step"><span class="btc-step-n">3</span>Send the exact BTC amount shown</div>
+              <div class="btc-step"><span class="btc-step-n">4</span>Click Confirm below — we verify on-chain</div>
+            </div>
+            <div class="btc-note">Confirmed after 1 network confirmation (~10 min). Contact support@arianagrande.com for issues.</div>
+          </div>
+          <div class="pay-panel-paystack" style="display:none">
+            <div class="paystack-info">
+              <div class="paystack-logo">&#x26A1; Paystack</div>
+              <p class="paystack-desc">You will be redirected to Paystack secure checkout to complete your payment.</p>
+              <div class="paystack-badges">
+                <span class="ps-badge">Secure</span>
+                <span class="ps-badge">Instant</span>
+                <span class="ps-badge">Verified</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="submit-btn" data-submit="vip" data-form="vipForm">Pay &amp; Book VIP Package</button>
+      </div>
+
+      <div class="success-screen" id="vip-success">
+        <div class="success-icon">✓</div>
+        <h2 class="success-title">VIP Package Booked!</h2>
+        <p class="booking-ref" style="font-family:'Courier New',monospace;font-size:13px;color:var(--gold);margin-bottom:8px;letter-spacing:.1em"></p>
+        <p class="success-msg">Welcome to the inner circle. Your VIP package is confirmed. A dedicated concierge will reach out within 48 hours with all the details for your exclusive experience.</p>
+        <button class="btn-primary" data-close="vip">Done</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- JS loaded last -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="index.js"></script>
+
+</body>
+</html>

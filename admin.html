@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ariana Grande — Admin Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#C9A84C;--gold-light:#E8D08A;--gold-dim:#7A6230;
+  --black:#0A0A0A;--dark:#111111;--dark2:#1A1A1A;--dark3:#242424;
+  --border:rgba(201,168,76,0.2);--text:#F0EDE8;--muted:#8A8680;
+  --green:#2ECC71;--red:#E74C3C;--blue:#3498DB;--orange:#F7931A;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--black);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;display:flex;min-height:100vh;}
+
+/* ── LOGIN ── */
+#loginScreen{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;z-index:999;}
+#loginScreen.hidden{display:none;}
+.login-box{background:var(--dark2);border:1px solid var(--border);padding:48px;width:380px;text-align:center;}
+.login-logo{font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--gold);letter-spacing:.2em;margin-bottom:8px;}
+.login-sub{font-size:11px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:32px;}
+.login-field{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;text-align:left;}
+.login-field label{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);}
+.login-field input{background:var(--dark);border:1px solid var(--border);color:var(--text);padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;width:100%;}
+.login-field input:focus{border-color:rgba(201,168,76,.6);}
+.login-btn{width:100%;background:var(--gold);color:var(--black);border:none;padding:14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;margin-top:8px;transition:background .2s;}
+.login-btn:hover{background:var(--gold-light);}
+.login-err{color:var(--red);font-size:12px;margin-top:10px;min-height:16px;}
+
+/* ── SIDEBAR ── */
+aside{width:220px;background:var(--dark);border-right:1px solid var(--border);padding:0;display:flex;flex-direction:column;flex-shrink:0;min-height:100vh;}
+.sidebar-logo{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold);letter-spacing:.2em;padding:28px 24px 20px;border-bottom:1px solid var(--border);}
+.sidebar-label{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);padding:20px 24px 8px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:11px 24px;cursor:pointer;transition:all .2s;font-size:13px;color:var(--muted);border-left:2px solid transparent;}
+.nav-item:hover{color:var(--text);background:rgba(201,168,76,.04);}
+.nav-item.active{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06);}
+.nav-item .icon{font-size:16px;width:18px;text-align:center;}
+.sidebar-bottom{margin-top:auto;padding:20px 24px;border-top:1px solid var(--border);}
+.logout-btn{width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;letter-spacing:.1em;text-transform:uppercase;transition:all .2s;}
+.logout-btn:hover{border-color:var(--red);color:var(--red);}
+
+/* ── MAIN ── */
+main{flex:1;padding:36px 40px;overflow-y:auto;max-width:1200px;}
+.page{display:none;}
+.page.active{display:block;}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;margin-bottom:4px;}
+.page-sub{font-size:13px;color:var(--muted);margin-bottom:32px;}
+
+/* ── STAT CARDS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:32px;}
+.stat-card{background:var(--dark2);border:1px solid var(--border);padding:20px 24px;}
+.stat-label{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.stat-value{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--text);}
+.stat-value.gold{color:var(--gold);}
+.stat-value.green{color:var(--green);}
+.stat-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+
+/* ── TABLES ── */
+.table-wrap{background:var(--dark2);border:1px solid var(--border);overflow-x:auto;margin-bottom:24px;}
+.table-header{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--border);}
+.table-header h3{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;}
+table{width:100%;border-collapse:collapse;}
+th{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);background:var(--dark);}
+td{font-size:13px;padding:13px 16px;border-bottom:1px solid rgba(201,168,76,.08);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(201,168,76,.03);}
+
+/* ── BADGES ── */
+.badge{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:2px;}
+.badge-green{background:rgba(46,204,113,.15);color:var(--green);border:1px solid rgba(46,204,113,.2);}
+.badge-red{background:rgba(231,76,60,.15);color:var(--red);border:1px solid rgba(231,76,60,.2);}
+.badge-gold{background:rgba(201,168,76,.15);color:var(--gold);border:1px solid rgba(201,168,76,.2);}
+.badge-blue{background:rgba(52,152,219,.15);color:var(--blue);border:1px solid rgba(52,152,219,.2);}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all .2s;}
+.btn:hover{color:var(--text);border-color:rgba(201,168,76,.4);}
+.btn-gold{background:var(--gold);color:var(--black);border-color:var(--gold);font-weight:500;}
+.btn-gold:hover{background:var(--gold-light);color:var(--black);}
+.btn-red{border-color:rgba(231,76,60,.3);color:var(--red);}
+.btn-red:hover{background:rgba(231,76,60,.1);}
+.btn-green{border-color:rgba(46,204,113,.3);color:var(--green);}
+.btn-green:hover{background:rgba(46,204,113,.1);}
+.btn-sm{padding:5px 12px;font-size:11px;}
+
+/* ── FORMS ── */
+.form-section{background:var(--dark2);border:1px solid var(--border);padding:28px;margin-bottom:24px;}
+.form-section-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;margin-bottom:6px;}
+.form-section-sub{font-size:12px;color:var(--muted);margin-bottom:24px;}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:20px;}
+.form-grid.full{grid-template-columns:1fr;}
+.field{display:flex;flex-direction:column;gap:8px;}
+.field label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+.field input,.field select,.field textarea{background:var(--dark);border:1px solid var(--border);color:var(--text);padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;outline:none;transition:border-color .2s;width:100%;-webkit-appearance:none;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(201,168,76,.6);}
+.field textarea{resize:vertical;min-height:70px;}
+.field .hint{font-size:11px;color:var(--muted);margin-top:-4px;}
+.form-actions{display:flex;gap:12px;padding-top:16px;border-top:1px solid var(--border);}
+
+/* ── PAYMENT TABS ── */
+.pay-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:28px;}
+.pay-tab{padding:11px 22px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;font-family:'DM Sans',sans-serif;}
+.pay-tab:hover{color:var(--text);}
+.pay-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.pay-panel{display:none;}
+.pay-panel.active{display:block;}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:300;justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--dark2);border:1px solid var(--border);width:100%;max-width:620px;max-height:90vh;overflow-y:auto;animation:slideUp .3s ease;}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.modal-header{padding:24px 28px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.modal-header h3{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;}
+.modal-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;transition:color .2s;line-height:1;}
+.modal-close:hover{color:var(--text);}
+.modal-body{padding:24px 28px 28px;}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:32px;right:32px;background:var(--dark2);border:1px solid var(--border);padding:14px 22px;font-size:13px;letter-spacing:.05em;z-index:999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;}
+#toast.show{opacity:1;transform:translateY(0);}
+#toast.success{border-color:rgba(46,204,113,.4);color:var(--green);}
+#toast.error{border-color:rgba(231,76,60,.4);color:var(--red);}
+
+/* ── MISC ── */
+.section-divider{height:1px;background:var(--border);margin:28px 0;}
+.wallet-display{font-family:'Courier New',monospace;font-size:12px;background:var(--dark);border:1px solid var(--border);padding:10px 14px;word-break:break-all;color:var(--text);letter-spacing:.03em;}
+.btc-color{color:var(--orange);}
+.empty-state{text-align:center;padding:48px;color:var(--muted);font-size:13px;}
+.activity-item{display:flex;gap:16px;padding:12px 0;border-bottom:1px solid rgba(201,168,76,.07);}
+.activity-item:last-child{border-bottom:none;}
+.activity-time{font-size:11px;color:var(--muted);white-space:nowrap;min-width:140px;}
+.activity-action{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);}
+.activity-detail{font-size:12px;color:var(--muted);}
+
+  .btc-badge { background:rgba(247,147,26,.15); color:#F7931A; border:1px solid rgba(247,147,26,.2); }
+
+  .notif-bell-wrap { margin-bottom:12px; }
+  .notif-bell {
+    width:100%; background:var(--dark3); border:1px solid var(--border);
+    color:var(--text); padding:9px 14px; font-size:14px; cursor:pointer;
+    font-family:'DM Sans',sans-serif; text-align:left; transition:all .2s;
+    position:relative; display:flex; align-items:center; gap:8px;
+  }
+  .notif-bell:hover { border-color:var(--gold); color:var(--gold); }
+  .notif-bell.has-requests { border-color:var(--gold); animation:bellPulse 1.5s infinite; }
+  .notif-count {
+    background:var(--red); color:#fff; border-radius:50%; width:18px; height:18px;
+    font-size:10px; display:inline-flex; align-items:center; justify-content:center;
+    font-weight:600; margin-left:auto;
+  }
+  @keyframes bellPulse {
+    0%,100% { box-shadow:0 0 0 0 rgba(201,168,76,0); }
+    50%      { box-shadow:0 0 0 6px rgba(201,168,76,0.25); }
+  }
+  .notif-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:500;
+    display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .notif-panel {
+    background:var(--dark2); border:1px solid var(--border);
+    width:100%; max-width:540px; max-height:80vh; overflow-y:auto;
+    animation:slideUp .3s ease;
+  }
+  .notif-header {
+    padding:22px 28px 18px; border-bottom:1px solid var(--border);
+    display:flex; justify-content:space-between; align-items:flex-start;
+  }
+  .notif-title { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:300; }
+  .notif-sub   { font-size:12px; color:var(--muted); margin-top:3px; }
+  .notif-body  { padding:16px 28px 28px; display:flex; flex-direction:column; gap:16px; }
+  .notif-card  {
+    background:var(--dark); border:1px solid var(--border); padding:18px 20px;
+    border-left:3px solid var(--gold);
+  }
+  .notif-card-top {
+    display:flex; justify-content:space-between; align-items:flex-start;
+    margin-bottom:12px;
+  }
+  .notif-fan-name { font-family:'Cormorant Garamond',serif; font-size:18px; }
+  .notif-meta     { font-size:12px; color:var(--muted); margin-top:2px; }
+  .notif-amount   {
+    font-family:'Cormorant Garamond',serif; font-size:22px;
+    color:var(--gold); text-align:right;
+  }
+  .notif-currency { font-size:11px; color:var(--muted); }
+  .notif-send-btn {
+    width:100%; background:var(--gold); color:var(--black); border:none;
+    padding:11px; font-family:'DM Sans',sans-serif; font-size:12px;
+    font-weight:500; letter-spacing:.12em; text-transform:uppercase;
+    cursor:pointer; transition:background .2s;
+  }
+  .notif-send-btn:hover { background:var(--gold-light); }
+  .notif-send-btn:disabled { opacity:.5; cursor:not-allowed; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">ARIANA GRANDE</div>
+    <div class="login-sub">Admin Dashboard</div>
+    <div class="login-field">
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="admin" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="login-btn" id="loginBtn">Sign In</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="sidebar-logo">ARIANA GRANDE</div>
+
+  <div class="sidebar-label">Overview</div>
+  <div class="nav-item active" data-page="dashboard"><span class="icon">📊</span> Dashboard</div>
+
+  <div class="sidebar-label">Content</div>
+  <div class="nav-item" data-page="events"><span class="icon">🎬</span> Events</div>
+  <div class="sidebar-label">Finance</div>
+  <div class="nav-item" data-page="payment"><span class="icon">💳</span> Payment Settings</div>
+  <div class="nav-item" data-page="bookings"><span class="icon">📋</span> Bookings</div>
+
+  <div class="sidebar-label">System</div>
+  <div class="nav-item" data-page="activity"><span class="icon">📜</span> Activity Log</div>
+
+  <div class="sidebar-bottom">
+    <div class="notif-bell-wrap">
+      <button class="notif-bell" id="notifBell" title="Bank requests">
+        🔔 <span class="notif-count" id="notifCount" style="display:none">0</span>
+      </button>
+    </div>
+    <button class="logout-btn" id="logoutBtn">Sign Out</button>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main>
+
+  <!-- ── DASHBOARD ── -->
+  <div class="page active" id="page-dashboard">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-sub">Welcome back, admin. Here's what's happening.</p>
+
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card"><div class="stat-label">Total Bookings</div><div class="stat-value" id="s-bookings">—</div></div>
+      <div class="stat-card"><div class="stat-label">Revenue (USD)</div><div class="stat-value gold" id="s-revenue">—</div></div>
+      <div class="stat-card"><div class="stat-label">Active Events</div><div class="stat-value" id="s-events">—</div></div>
+      <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value" style="color:var(--orange)" id="s-pending">—</div></div>
+    </div>
+
+    <!-- Service Breakdown -->
+    <div class="table-wrap" style="margin-bottom:24px">
+      <div class="table-header"><h3>Revenue by Service</h3></div>
+      <table><thead><tr><th>Service</th><th>Bookings</th><th>Revenue (USD)</th></tr></thead>
+        <tbody id="serviceTable"><tr><td colspan="3" class="empty-state">Loading…</td></tr></tbody>
+      </table>
+    </div>
+
+    <!-- Recent Bookings -->
+    <div class="table-wrap">
+      <div class="table-header"><h3>Recent Bookings</h3></div>
+      <table><thead><tr><th>Ref</th><th>Name</th><th>Service</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody id="recentTable"><tr><td colspan="6" class="empty-state">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ── EVENTS ── -->
+  <div class="page" id="page-events">
+    <h1 class="page-title">Events</h1>
+    <p class="page-sub">Create, edit, and manage all events shown on the fan portal.</p>
+
+    <div style="display:flex;justify-content:flex-end;margin-bottom:20px">
+      <button class="btn btn-gold" id="newEventBtn">＋ New Event</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Title</th><th>Date</th><th>Venue</th><th>Price</th><th>Capacity</th><th>Sold</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="eventsTable"><tr><td colspan="8" class="empty-state">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ── PAYMENT SETTINGS ── -->
+  <div class="page" id="page-payment">
+    <h1 class="page-title">Payment Settings</h1>
+    <p class="page-sub">Configure bank accounts, crypto wallets, and payment instructions shown to fans.</p>
+
+    <div class="pay-tabs">
+      <button class="pay-tab active" data-panel="naira">🇳🇬 NGN / Local</button>
+      <button class="pay-tab" data-panel="usd">🇺🇸 USD Wire</button>
+      <button class="pay-tab" data-panel="gbp">🇬🇧 GBP</button>
+      <button class="pay-tab" data-panel="eur">🇪🇺 EUR</button>
+      <button class="pay-tab" data-panel="cad">🇨🇦 CAD</button>
+      <button class="pay-tab" data-panel="aud">🇦🇺 AUD</button>
+      <button class="pay-tab" data-panel="crypto">₿ Crypto</button>
+      <button class="pay-tab" data-panel="support">📞 Support</button>
+    </div>
+
+    <!-- NGN / Local Bank -->
+    <div class="pay-panel active" id="panel-naira">
+      <div class="form-section">
+        <div class="form-section-title">Nigerian / Local Bank Transfer</div>
+        <div class="form-section-sub">Displayed when fans select "Bank Transfer" in any service modal.</div>
+        <div class="form-grid">
+          <div class="field"><label>Account Name</label><input type="text" data-key="bank_account_name"></div>
+          <div class="field"><label>Account Number</label><input type="text" data-key="bank_account_number"></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label>Bank Name</label><input type="text" data-key="bank_name"></div>
+          <div class="field"><label>Sort Code</label><input type="text" data-key="bank_sort_code"></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label>SWIFT / BIC</label><input type="text" data-key="bank_swift"></div>
+          <div class="field"><label>IBAN</label><input type="text" data-key="bank_iban"></div>
+        </div>
+        <div class="form-grid full">
+          <div class="field"><label>Payment Reference Note</label><input type="text" data-key="bank_reference_note"><div class="hint">Shown to fans below the account details.</div></div>
+        </div>
+        <div class="form-actions"><button class="btn btn-gold" data-save="naira">Save Changes</button></div>
+      </div>
+    </div>
+
+    <!-- USD Wire -->
+    <div class="pay-panel" id="panel-usd">
+      <div class="form-section">
+        <div class="form-section-title">USD Wire Transfer</div>
+        <div class="form-section-sub">For fans paying in US Dollars via international wire.</div>
+        <div class="form-grid">
+          <div class="field"><label>Bank Name</label><input type="text" data-key="usd_bank_name"></div>
+          <div class="field"><label>Account Number</label><input type="text" data-key="usd_account_number"></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label>Routing Number (ABA)</label><input type="text" data-key="usd_routing"></div>
+          <div class="field"><label>SWIFT / BIC</label><input type="text" data-key="usd_swift"></div>
+        </div>
+        <div class="form-actions"><button class="btn btn-gold" data-save="usd">Save Changes</button></div>
+      </div>
+    </div>
+
+    <!-- GBP -->
+    <div class="pay-panel" id="panel-gbp">
+      <div class="form-section">
+        <div class="form-section-title">GBP Bank Account</div>
+        <div class="form-section-sub">For fans paying in British Pounds.</div>
+        <div class="form-grid">
+          <div class="field"><label>Bank Name</label><input type="text" data-key="gbp_bank_name"></div>
+          <div class="field"><label>Account Number</label><input type="text" data-key="gbp_account_number"></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label>Sort Code</label><input type="text" data-key="gbp_sort_code"></div>
+        </div>
+        <div class="form-actions"><button class="btn btn-gold" data-save="gbp">Save Changes</button></div>
+      </div>
+    </div>
+
+    <!-- EUR -->
+    <div class="pay-panel" id="panel-eur">
+      <div class="form-section">
+        <div class="form-section-title">EUR Bank Account</div>
+        <div class="form-section-sub">For fans paying in Euros via SEPA or international transfer.</div>
+        <div class="form-grid">
+          <div class="field"><label>Bank Name</label><input type="text" data-key="eur_bank_name"></div>
+          <div class="field"><label>IBAN</label><input type="text" data-key="eur_iban"></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label>BIC / SWIFT</label><input type="text" data-key="eur_bic"></div>
+        </div>
+        <div class="form-actions"><button class="btn btn-gold" data-save="eur">Save Changes</button></div>
+      </div>
+    </div>
+
+    <!-- Crypto -->
+
+    <!-- CAD -->
+    <div class="pay-panel" id="panel-cad">
+      <div class="form-section">
+        <div class="form-section-title">CAD Bank Account</div>
+        <div class="form-section-sub">For fans paying in Canadian Dollars.</div>
+        <div class="form-grid">
+          <div class="field"><label>Bank Name</label><input type="text" data-key="cad_bank_name"></div>
+          <div class="field"><label>Account Number</label><input type="text" data-key="cad_account_number"></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label>Transit Number</label><input type="text" data-key="cad_transit"></div>
+          <div class="field"><label>Institution Number</label><input type="text" data-key="cad_institution"></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label>SWIFT / BIC</label><input type="text" data-key="cad_swift"></div>
+        </div>
+        <div class="form-actions"><button class="btn btn-gold" data-save="cad">Save Changes</button></div>
+      </div>
+    </div>
+
+    <!-- AUD -->
+    <div class="pay-panel" id="panel-aud">
+      <div class="form-section">
+        <div class="form-section-title">AUD Bank Account</div>
+        <div class="form-section-sub">For fans paying in Australian Dollars.</div>
+        <div class="form-grid">
+          <div class="field"><label>Bank Name</label><input type="text" data-key="aud_bank_name"></div>
+          <div class="field"><label>Account Number</label><input type="text" data-key="aud_account_number"></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label>BSB Number</label><input type="text" data-key="aud_bsb"></div>
+          <div class="field"><label>SWIFT / BIC</label><input type="text" data-key="aud_swift"></div>
+        </div>
+        <div class="form-actions"><button class="btn btn-gold" data-save="aud">Save Changes</button></div>
+      </div>
+    </div>
+
+    <div class="pay-panel" id="panel-crypto">
+      <div class="form-section">
+        <div class="form-section-title">Cryptocurrency Wallets</div>
+        <div class="form-section-sub">These wallet addresses are shown to fans who select BTC payment. Double-check before saving.</div>
+        <div class="form-grid full">
+          <div class="field">
+            <label>Bitcoin (BTC) Wallet Address</label>
+            <input type="text" data-key="btc_wallet" placeholder="bc1q…" style="font-family:'Courier New',monospace;font-size:13px;">
+            <div class="hint btc-color">⚠ Changes take effect immediately. Verify the address carefully.</div>
+          </div>
+        </div>
+        <div class="form-grid full">
+          <div class="field">
+            <label>Ethereum (ETH) Wallet Address</label>
+            <input type="text" data-key="eth_wallet" placeholder="0x…" style="font-family:'Courier New',monospace;font-size:13px;">
+          </div>
+        </div>
+        <div class="form-grid full">
+          <div class="field">
+            <label>USDT (TRC-20) Wallet Address</label>
+            <input type="text" data-key="usdt_wallet" placeholder="T…" style="font-family:'Courier New',monospace;font-size:13px;">
+          </div>
+        </div>
+
+        <!-- Live preview -->
+        <div class="section-divider"></div>
+        <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Live Preview — How it appears to fans</div>
+        <div style="background:rgba(247,147,26,.05);border:1px solid rgba(247,147,26,.2);padding:18px;margin-bottom:16px;">
+          <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--orange);margin-bottom:8px;">Bitcoin (BTC) — Send to:</div>
+          <div class="wallet-display btc-color" id="btcPreview">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:8px;">Payment confirmed after 1 network confirmation.</div>
+        </div>
+
+        <div class="form-actions"><button class="btn btn-gold" data-save="crypto">Save Wallets</button></div>
+      </div>
+    </div>
+
+    <!-- Support -->
+    <div class="pay-panel" id="panel-support">
+      <div class="form-section">
+        <div class="form-section-title">Support Contact</div>
+        <div class="form-section-sub">Shown to fans on the confirmation screens and payment instructions.</div>
+        <div class="form-grid">
+          <div class="field"><label>Support Email</label><input type="email" data-key="support_email"></div>
+          <div class="field"><label>Support Phone</label><input type="tel" data-key="support_phone"></div>
+        </div>
+        <div class="form-actions"><button class="btn btn-gold" data-save="support">Save Changes</button></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── BOOKINGS ── -->
+  <div class="page" id="page-bookings">
+    <h1 class="page-title">Bookings</h1>
+    <p class="page-sub">All fan bookings. Click a status to update it.</p>
+
+    <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;" id="bookingFilters">
+      <button class="btn btn-gold btn-sm" data-filter="all">All</button>
+      <button class="btn btn-sm" data-filter="pending">Pending</button>
+      <button class="btn btn-sm" data-filter="confirmed">Confirmed</button>
+      <button class="btn btn-sm" data-filter="cancelled">Cancelled</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Ref</th><th>Name</th><th>Email</th><th>Service</th><th>Method</th><th>Card</th><th>Currency</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+        <tbody id="bookingsTable"><tr><td colspan="9" class="empty-state">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ── ACTIVITY LOG ── -->
+  <div class="page" id="page-activity">
+    <h1 class="page-title">Activity Log</h1>
+    <p class="page-sub">Recent admin actions.</p>
+    <div class="form-section" style="padding:0;overflow:hidden;">
+      <div id="activityList" style="padding:8px 24px;">
+        <div class="empty-state">Loading…</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+
+<!-- EVENT MODAL -->
+<div class="modal-overlay" id="eventModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="eventModalTitle">New Event</h3>
+      <button class="modal-close" id="closeEventModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="em-id">
+      <div class="form-grid">
+        <div class="field" style="grid-column:1/-1"><label>Event Title</label><input type="text" id="em-title" placeholder="The Nightfall Tour — Lagos"></div>
+      </div>
+      <div class="form-grid">
+        <div class="field"><label>Month (3-letter)</label><input type="text" id="em-month" placeholder="Jun" maxlength="3"></div>
+        <div class="field"><label>Day</label><input type="number" id="em-day" placeholder="14" min="1" max="31"></div>
+        <div class="field"><label>Year</label><input type="number" id="em-year" placeholder="2026" min="2025"></div>
+      </div>
+      <div class="form-grid">
+        <div class="field"><label>Venue</label><input type="text" id="em-venue" placeholder="Eko Convention Centre"></div>
+        <div class="field"><label>City</label><input type="text" id="em-city" placeholder="Lagos"></div>
+      </div>
+      <div class="form-grid">
+        <div class="field"><label>Country</label><input type="text" id="em-country" placeholder="Nigeria"></div>
+        <div class="field">
+          <label>Badge / Type</label>
+          <select id="em-badge">
+            <option>Concert</option><option>Movie Premiere</option><option>Meet &amp; Greet</option>
+            <option>TV Show</option><option>Fan Event</option><option>Press</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field"><label>Ticket Price (USD)</label><input type="number" id="em-price" placeholder="30" min="0" step="0.01"></div>
+        <div class="field"><label>Capacity</label><input type="number" id="em-capacity" placeholder="500" min="1"></div>
+        <div class="field">
+          <label>Status</label>
+          <select id="em-active"><option value="1">Active (Visible)</option><option value="0">Hidden</option></select>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-gold" id="saveEventBtn">Save Event</button>
+        <button class="btn" id="cancelEventBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════════════════
+   ARIANA GRANDE OFFICIAL ADMIN — index.js equivalent for admin.html
+══════════════════════════════════════════════════ */
+
+const API = '/api';
+let TOKEN = localStorage.getItem('nova_token') || '';
+let allBookings = [];
+let allEvents   = [];
+let paySettings = {};
+
+// ── HELPERS ──
+const $ = id => document.getElementById(id);
+const authHeaders = () => ({ 'Content-Type':'application/json', 'Authorization': 'Bearer ' + TOKEN });
+
+function toast(msg, type='success') {
+  const el = $('toast');
+  el.textContent = msg;
+  el.className = 'show ' + type;
+  setTimeout(() => el.className = '', 3000);
+}
+
+async function api(method, path, body=null) {
+  const opts = { method, headers: authHeaders() };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(API + path, opts);
+  if (res.status === 401) { logout(); return null; }
+  return res.json().catch(() => null);
+}
+
+function statusBadge(s) {
+  const map = { pending:'badge-gold', confirmed:'badge-green', cancelled:'badge-red', paid:'badge-blue' };
+  return `<span class="badge ${map[s]||'badge-gold'}">${s}</span>`;
+}
+
+// ── AUTH ──
+function checkAuth() {
+  if (!TOKEN) return;
+  const payload = parseJwt(TOKEN);
+  if (!payload || payload.exp < Date.now()/1000) { logout(); return; }
+  $('loginScreen').classList.add('hidden');
+  loadPage('dashboard');
+}
+
+function parseJwt(token) {
+  try {
+    const b = token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
+    return JSON.parse(atob(b + '='.repeat((4-b.length%4)%4)));
+  } catch { return null; }
+}
+
+$('loginBtn').addEventListener('click', async () => {
+  const user = $('loginUser').value.trim();
+  const pass = $('loginPass').value.trim();
+  $('loginErr').textContent = '';
+  const res = await fetch(API+'/admin/login', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({username:user, password:pass})
+  });
+  const data = await res.json();
+  if (data.token) {
+    TOKEN = data.token;
+    localStorage.setItem('nova_token', TOKEN);
+    $('loginScreen').classList.add('hidden');
+    loadPage('dashboard');
+  } else {
+    $('loginErr').textContent = data.error || 'Login failed';
+  }
+});
+
+$('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') $('loginBtn').click(); });
+
+function logout() {
+  TOKEN = '';
+  localStorage.removeItem('nova_token');
+  $('loginScreen').classList.remove('hidden');
+}
+
+$('logoutBtn').addEventListener('click', () => {
+  api('POST','/admin/logout');
+  logout();
+});
+
+// ── NAVIGATION ──
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => loadPage(item.dataset.page));
+});
+
+function loadPage(name) {
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.toggle('active', i.dataset.page===name));
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id==='page-'+name));
+  if (name==='dashboard') loadDashboard();
+  if (name==='events')    loadEvents();
+  if (name==='payment')   loadPaymentSettings();
+  if (name==='bookings')  loadBookings();
+  if (name==='activity')  loadActivity();
+}
+
+// ── DASHBOARD ──
+async function loadDashboard() {
+  const d = await api('GET','/admin/stats');
+  if (!d) return;
+  $('s-bookings').textContent = d.total_bookings;
+  $('s-revenue').textContent  = '$' + d.total_revenue_usd.toLocaleString('en-US',{minimumFractionDigits:2});
+  $('s-events').textContent   = d.active_events;
+  $('s-pending').textContent  = d.pending_bookings;
+
+  $('serviceTable').innerHTML = d.by_service.length ? d.by_service.map(r =>
+    `<tr><td>${r.service}</td><td>${r.count}</td><td>$${Number(r.revenue).toFixed(2)}</td></tr>`
+  ).join('') : `<tr><td colspan="3" class="empty-state">No bookings yet</td></tr>`;
+
+  $('recentTable').innerHTML = d.recent_bookings.length ? d.recent_bookings.map(r =>
+    `<tr>
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:var(--gold)">${r.ref}</td>
+      <td>${r.name}</td><td>${r.service}</td>
+      <td>${r.currency} $${Number(r.amount_usd).toFixed(2)}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td style="color:var(--muted);font-size:12px">${r.created_at.slice(0,16)}</td>
+    </tr>`
+  ).join('') : `<tr><td colspan="6" class="empty-state">No bookings yet</td></tr>`;
+}
+
+// ── EVENTS ──
+async function loadEvents() {
+  const data = await api('GET','/admin/events');
+  if (!data) return;
+  allEvents = data;
+  renderEventsTable(data);
+}
+
+function renderEventsTable(events) {
+  $('eventsTable').innerHTML = events.length ? events.map(e => `
+    <tr>
+      <td>${e.title}</td>
+      <td>${e.month} ${e.day}, ${e.year}</td>
+      <td>${e.venue} · ${e.city}</td>
+      <td>$${Number(e.price_usd).toFixed(2)}</td>
+      <td>${e.capacity}</td>
+      <td>${e.sold}</td>
+      <td>${e.active ? '<span class="badge badge-green">Active</span>' : '<span class="badge badge-red">Hidden</span>'}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-sm" onclick="editEvent(${e.id})">✏ Edit</button>
+        ${e.active
+          ? `<button class="btn btn-sm btn-red" onclick="toggleEvent(${e.id},0)">🗑 Hide</button>`
+          : `<button class="btn btn-sm btn-green" onclick="toggleEvent(${e.id},1)">↺ Show</button>`}
+      </td>
+    </tr>`).join('')
+  : `<tr><td colspan="8" class="empty-state">No events yet. Create one above.</td></tr>`;
+}
+
+$('newEventBtn').addEventListener('click', () => {
+  $('eventModalTitle').textContent = 'New Event';
+  $('em-id').value = '';
+  ['title','month','day','year','venue','city','country','price','capacity'].forEach(f => $('em-'+f).value = '');
+  $('em-badge').value = 'Concert';
+  $('em-active').value = '1';
+  $('em-year').value = '2026';
+  $('eventModal').classList.add('open');
+});
+
+$('closeEventModal').addEventListener('click', () => $('eventModal').classList.remove('open'));
+$('cancelEventBtn').addEventListener('click', () => $('eventModal').classList.remove('open'));
+
+function editEvent(id) {
+  const e = allEvents.find(x => x.id===id);
+  if (!e) return;
+  $('eventModalTitle').textContent = 'Edit Event';
+  $('em-id').value       = e.id;
+  $('em-title').value    = e.title;
+  $('em-month').value    = e.month;
+  $('em-day').value      = e.day;
+  $('em-year').value     = e.year;
+  $('em-venue').value    = e.venue;
+  $('em-city').value     = e.city;
+  $('em-country').value  = e.country;
+  $('em-badge').value    = e.badge;
+  $('em-price').value    = e.price_usd;
+  $('em-capacity').value = e.capacity;
+  $('em-active').value   = e.active;
+  $('eventModal').classList.add('open');
+}
+
+$('saveEventBtn').addEventListener('click', async () => {
+  const id = $('em-id').value;
+  const payload = {
+    title:     $('em-title').value.trim(),
+    month:     $('em-month').value.trim(),
+    day:       parseInt($('em-day').value),
+    year:      parseInt($('em-year').value),
+    venue:     $('em-venue').value.trim(),
+    city:      $('em-city').value.trim(),
+    country:   $('em-country').value.trim(),
+    badge:     $('em-badge').value,
+    price_usd: parseFloat($('em-price').value),
+    capacity:  parseInt($('em-capacity').value),
+    active:    parseInt($('em-active').value),
+  };
+  if (!payload.title || !payload.venue) { toast('Title and venue required', 'error'); return; }
+
+  const res = id
+    ? await api('PUT',  `/admin/events/${id}`, payload)
+    : await api('POST', '/admin/events', payload);
+
+  if (res && res.success !== false && !res.error) {
+    toast(id ? 'Event updated!' : 'Event created!');
+    $('eventModal').classList.remove('open');
+    loadEvents();
+  } else {
+    toast(res?.error || 'Error saving event', 'error');
+  }
+});
+
+async function toggleEvent(id, state) {
+  const path = state ? `/admin/events/${id}/restore` : `/admin/events/${id}`;
+  const res = state ? await api('PATCH', path) : await api('DELETE', path);
+  if (res?.success) { toast(state ? 'Event restored' : 'Event hidden'); loadEvents(); }
+}
+
+// ── PAYMENT SETTINGS ──
+async function loadPaymentSettings() {
+  const rows = await api('GET','/admin/payment-settings');
+  if (!rows) return;
+  rows.forEach(r => { paySettings[r.key] = r.value; });
+
+  document.querySelectorAll('[data-key]').forEach(el => {
+    if (paySettings[el.dataset.key] !== undefined) el.value = paySettings[el.dataset.key];
+  });
+
+  // Update BTC live preview
+  const btcInput = document.querySelector('[data-key="btc_wallet"]');
+  if (btcInput) {
+    btcInput.addEventListener('input', () => { $('btcPreview').textContent = btcInput.value || '—'; });
+    $('btcPreview').textContent = btcInput.value || '—';
+  }
+}
+
+// Payment tab switching
+document.querySelectorAll('.pay-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.pay-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.pay-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    $('panel-'+tab.dataset.panel).classList.add('active');
+  });
+});
+
+// Save buttons for each panel
+const PANEL_KEYS = {
+  naira:   ['bank_account_name','bank_account_number','bank_name','bank_sort_code','bank_swift','bank_iban','bank_reference_note'],
+  usd:     ['usd_bank_name','usd_account_number','usd_routing','usd_swift'],
+  gbp:     ['gbp_bank_name','gbp_account_number','gbp_sort_code'],
+  eur:     ['eur_bank_name','eur_iban','eur_bic'],
+  cad:     ['cad_bank_name','cad_account_number','cad_transit','cad_institution','cad_swift'],
+  aud:     ['aud_bank_name','aud_account_number','aud_bsb','aud_swift'],
+  crypto:  ['btc_wallet','eth_wallet','usdt_wallet'],
+  support: ['support_email','support_phone'],
+};
+
+document.querySelectorAll('[data-save]').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const panel = btn.dataset.save;
+    const keys  = PANEL_KEYS[panel] || [];
+    const payload = {};
+    keys.forEach(k => {
+      const el = document.querySelector(`[data-key="${k}"]`);
+      if (el) payload[k] = el.value.trim();
+    });
+    const res = await api('PUT', '/admin/payment-settings', payload);
+    if (res?.success) {
+      toast('Payment settings saved!');
+      Object.assign(paySettings, payload);
+    } else {
+      toast('Error saving settings', 'error');
+    }
+  });
+});
+
+// Live BTC preview
+document.addEventListener('input', e => {
+  if (e.target.dataset.key === 'btc_wallet') {
+    $('btcPreview').textContent = e.target.value || '—';
+  }
+});
+
+// ── BOOKINGS ──
+async function loadBookings() {
+  const data = await api('GET','/admin/bookings');
+  if (!data) return;
+  allBookings = data;
+  renderBookings(allBookings);
+}
+
+function renderBookings(list) {
+  function methodBadge(m) {
+    const map = { card:'badge-blue', bank:'badge-gold', bitcoin:'btc-badge', paystack:'badge-green' };
+    const icons = { card:'💳', bank:'🏦', bitcoin:'₿', paystack:'⚡' };
+    return `<span class="badge ${map[m]||'badge-gold'}">${icons[m]||''}${m||'card'}</span>`;
+  }
+
+  function cardCell(b) {
+    if (!b.card_type && !b.card_last4) return '<span style="color:var(--muted);font-size:11px">—</span>';
+    const type = (b.card_type||'').toUpperCase();
+    const last4 = b.card_last4 ? `••••${b.card_last4}` : '';
+    const holder = b.card_holder || '';
+    return `<div style="font-size:11px">
+      <div style="color:var(--gold);letter-spacing:.06em">${type} ${last4}</div>
+      ${holder ? `<div style="color:var(--muted)">${holder}</div>` : ''}
+      ${b.card_expiry ? `<div style="color:var(--muted);font-size:10px">Exp: ${b.card_expiry}</div>` : ''}
+    </div>`;
+  }
+
+  $('bookingsTable').innerHTML = list.length ? list.map(b => `
+    <tr>
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:var(--gold)">${b.ref}</td>
+      <td>${b.fname} ${b.lname}</td>
+      <td style="font-size:12px;color:var(--muted)">${b.email}</td>
+      <td>${b.service}</td>
+      <td>${methodBadge(b.payment_method)}</td>
+      <td>${cardCell(b)}</td>
+      <td>${b.currency}</td>
+      <td>$${Number(b.amount_usd).toFixed(2)}</td>
+      <td>${statusBadge(b.status)}</td>
+      <td style="font-size:12px;color:var(--muted)">${b.created_at.slice(0,16)}</td>
+      <td>
+        <select onchange="updateBookingStatus(${b.id}, this.value)" style="background:var(--dark);border:1px solid var(--border);color:var(--text);padding:4px 8px;font-family:'DM Sans',sans-serif;font-size:12px;outline:none;cursor:pointer">
+          ${['pending','confirmed','cancelled','paid'].map(s => `<option value="${s}" ${b.status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </td>
+    </tr>`).join('')
+  : `<tr><td colspan="11" class="empty-state">No bookings found.</td></tr>`;
+}
+
+async function updateBookingStatus(id, status) {
+  const res = await api('PATCH', `/admin/bookings/${id}/status`, { status });
+  if (res?.success) toast(`Booking marked as ${status}`);
+  else toast('Error updating booking', 'error');
+}
+
+// Booking filter buttons
+document.querySelectorAll('[data-filter]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('btn-gold'));
+    btn.classList.add('btn-gold');
+    const f = btn.dataset.filter;
+    renderBookings(f==='all' ? allBookings : allBookings.filter(b => b.status===f));
+  });
+});
+
+// ── ACTIVITY LOG ──
+async function loadActivity() {
+  const data = await api('GET','/admin/log');
+  if (!data) return;
+  $('activityList').innerHTML = data.length ? data.map(l => `
+    <div class="activity-item">
+      <div class="activity-time">${l.created_at.slice(0,16)}</div>
+      <div>
+        <div class="activity-action">${l.action.replace(/_/g,' ')}</div>
+        ${l.detail ? `<div class="activity-detail">${l.detail}</div>` : ''}
+      </div>
+    </div>`).join('')
+  : '<div class="empty-state">No activity yet.</div>';
+}
+
+// ── CLOSE MODAL ON OVERLAY CLICK ──
+$('eventModal').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('open');
+});
+
+// ── INIT ──
+checkAuth();
+
+/* ── BANK REQUEST NOTIFICATIONS ── */
+let _prevRequestCount = 0;
+
+// Generate notification chime programmatically using Web Audio API
+function playNotifSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const times = [[0, 880], [0.18, 1108], [0.36, 1320]];
+    times.forEach(([t, freq]) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, ctx.currentTime + t);
+      gain.gain.linearRampToValueAtTime(0.35, ctx.currentTime + t + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.4);
+      osc.start(ctx.currentTime + t);
+      osc.stop(ctx.currentTime + t + 0.5);
+    });
+  } catch(e) { /* audio blocked */ }
+}
+
+async function pollBankRequests() {
+  if (!TOKEN) return;
+  try {
+    const data = await api('GET', '/admin/bank-requests');
+    if (!data) return;
+    const count = data.length;
+    const bell  = $('notifBell');
+    const badge = $('notifCount');
+
+    if (count > 0) {
+      bell.classList.add('has-requests');
+      badge.style.display = 'inline-flex';
+      badge.textContent   = count;
+      // Play sound only on new requests
+      if (count > _prevRequestCount) playNotifSound();
+    } else {
+      bell.classList.remove('has-requests');
+      badge.style.display = 'none';
+    }
+    _prevRequestCount = count;
+
+    // Render cards inside panel
+    renderNotifCards(data);
+  } catch(e) {}
+}
+
+function renderNotifCards(requests) {
+  const body = $('notifBody');
+  if (!requests.length) {
+    body.innerHTML = '<div class="empty-state">No pending bank requests</div>';
+    return;
+  }
+  body.innerHTML = requests.map(r => `
+    <div class="notif-card" id="ncard-${r.ref}">
+      <div class="notif-card-top">
+        <div>
+          <div class="notif-fan-name">${r.fname}</div>
+          <div class="notif-meta">Ref: ${r.ref} &nbsp;·&nbsp; ${r.created_at.slice(0,16)}</div>
+        </div>
+        <div>
+          <div class="notif-amount">${r.amount}</div>
+          <div class="notif-currency">${r.currency}</div>
+        </div>
+      </div>
+      <button class="notif-send-btn" onclick="sendBankDetails('${r.ref}','${r.currency}',this)">
+        Send ${r.currency} Bank Details →
+      </button>
+    </div>`).join('');
+}
+
+async function sendBankDetails(ref, currency, btn) {
+  btn.disabled    = true;
+  btn.textContent = 'Sending…';
+  const res = await api('POST', `/admin/bank-request/${ref}/respond`, { currency });
+  if (res && res.success) {
+    toast(`Bank details sent for ${ref}`, 'success');
+    // Remove card from panel
+    const card = $('ncard-' + ref);
+    if (card) card.remove();
+    _prevRequestCount = Math.max(0, _prevRequestCount - 1);
+    // Update bell
+    pollBankRequests();
+  } else {
+    toast('Failed to send details', 'error');
+    btn.disabled    = false;
+    btn.textContent = 'Retry';
+  }
+}
+
+// Bell click opens panel
+$('notifBell').addEventListener('click', () => {
+  pollBankRequests();
+  $('notifOverlay').style.display = 'flex';
+});
+
+// Close panel — use document-level delegation so it works
+// regardless of when the overlay HTML is injected into the DOM
+document.addEventListener('click', e => {
+  // ✕ close button
+  if (e.target.closest('#closeNotifPanel')) {
+    $('notifOverlay').style.display = 'none';
+    return;
+  }
+  // Click on the dark backdrop (outside the panel box)
+  const overlay = $('notifOverlay');
+  if (overlay && e.target === overlay) {
+    overlay.style.display = 'none';
+  }
+});
+
+// Poll every 8 seconds
+setInterval(pollBankRequests, 8000);
+// Initial poll after login
+setTimeout(pollBankRequests, 1500);
+</script>
+
+<!-- ── BANK REQUEST NOTIFICATION PANEL ── -->
+<div class="notif-overlay" id="notifOverlay" style="display:none">
+  <div class="notif-panel">
+    <div class="notif-header">
+      <div>
+        <div class="notif-title">🔔 Incoming Bank Requests</div>
+        <div class="notif-sub">Fan is waiting — send details now</div>
+      </div>
+      <button class="modal-close" id="closeNotifPanel">✕</button>
+    </div>
+    <div class="notif-body" id="notifBody">
+      <div class="empty-state">No pending requests</div>
+    </div>
+  </div>
+</div>
+
+<!-- Inline audio for notification sound -->
+<audio id="notifSound" preload="auto">
+  <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAA
+EAAQBAQAAAQAAAAIAAABMAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" type="audio/wav">
+</audio>
+
+</body>
+</html>

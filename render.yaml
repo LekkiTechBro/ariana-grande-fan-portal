@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: ariana-grande-fan-portal
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn server:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120 --keep-alive 5
+    envVars:
+      - key: AG_SECRET
+        generateValue: true
+      - key: AG_ADMIN_USER
+        value: admin
+      - key: AG_ADMIN_PASS
+        value: ag2026!
+      - key: RENDER
+        value: true
+      - key: DB_PATH
+        value: /tmp/ag.db
+      - key: PYTHON_VERSION
+        value: 3.11.0
