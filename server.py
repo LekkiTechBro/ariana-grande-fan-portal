@@ -209,6 +209,30 @@ def init_db():
                 pass
 
         # Seed any missing price keys into existing DBs
+        # Seed missing service card content keys
+        svc_defaults = [
+            ('svc_ticket_icon',  '🎬'),
+            ('svc_ticket_title', 'Show & Movie Tickets'),
+            ('svc_ticket_desc',  "Reserve premium seats for Ariana Grande's live concerts, TV show tapings, and exclusive movie premiere screenings."),
+            ('svc_ticket_label', 'per seat'),
+            ('svc_mg_icon',      '🤝'),
+            ('svc_mg_title',     'Meet & Greet'),
+            ('svc_mg_desc',      'An intimate one-on-one experience. Get photos, autographs, and a personal conversation with Ariana backstage.'),
+            ('svc_mg_label',     'per person'),
+            ('svc_fc_icon',      '💳'),
+            ('svc_fc_title',     'Fan Membership Card'),
+            ('svc_fc_desc',      'Join the Official Ariana Grande Fan Club. Get early ticket access, exclusive merch discounts, and members-only content.'),
+            ('svc_fc_label',     'per year'),
+            ('svc_vip_icon',     '⭐'),
+            ('svc_vip_title',    'VIP Experience Package'),
+            ('svc_vip_desc',     'The ultimate fan package — front-row seats, backstage tour, meet & greet, signed merch, and afterparty access.'),
+            ('svc_vip_label',    'per person'),
+        ]
+        for key, val in svc_defaults:
+            try:
+                db.execute("INSERT OR IGNORE INTO payment_settings (key, value) VALUES (?,?)", (key, val))
+            except Exception: pass
+
         price_defaults = [
             ('price_ticket_from',       '30'),
             ('price_ticket_fee',        '1'),
@@ -333,6 +357,23 @@ def init_db():
                 ('price_fancard_platinum',   '50'),
                 ('price_fancard_delivery',   '1'),
                 ('price_vip',               '450'),
+                # ── Service Card Content ──
+                ('svc_ticket_icon',  '🎬'),
+                ('svc_ticket_title', 'Show & Movie Tickets'),
+                ('svc_ticket_desc',  "Reserve premium seats for Ariana Grande's live concerts, TV show tapings, and exclusive movie premiere screenings."),
+                ('svc_ticket_label', 'per seat'),
+                ('svc_mg_icon',      '🤝'),
+                ('svc_mg_title',     'Meet & Greet'),
+                ('svc_mg_desc',      'An intimate one-on-one experience. Get photos, autographs, and a personal conversation with Ariana backstage.'),
+                ('svc_mg_label',     'per person'),
+                ('svc_fc_icon',      '💳'),
+                ('svc_fc_title',     'Fan Membership Card'),
+                ('svc_fc_desc',      'Join the Official Ariana Grande Fan Club. Get early ticket access, exclusive merch discounts, and members-only content.'),
+                ('svc_fc_label',     'per year'),
+                ('svc_vip_icon',     '⭐'),
+                ('svc_vip_title',    'VIP Experience Package'),
+                ('svc_vip_desc',     'The ultimate fan package — front-row seats, backstage tour, meet & greet, signed merch, and afterparty access.'),
+                ('svc_vip_label',    'per person'),
             ]
             db.executemany(
                 "INSERT INTO payment_settings (key, value) VALUES (?,?)",
@@ -532,6 +573,11 @@ def get_payment_info():
         # Social & footer links — public
         'social_instagram', 'social_twitter', 'social_tiktok',
         'footer_contact_url', 'footer_terms_url', 'footer_copyright',
+        # Service card content — public
+        'svc_ticket_icon','svc_ticket_title','svc_ticket_desc','svc_ticket_label',
+        'svc_mg_icon','svc_mg_title','svc_mg_desc','svc_mg_label',
+        'svc_fc_icon','svc_fc_title','svc_fc_desc','svc_fc_label',
+        'svc_vip_icon','svc_vip_title','svc_vip_desc','svc_vip_label',
     }
     rows = query("SELECT key, value FROM payment_settings")
     data = {r['key']: r['value'] for r in rows if r['key'] in ALLOWED_KEYS}

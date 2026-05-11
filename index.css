@@ -122,6 +122,7 @@ nav.scrolled {
   border: 1px solid var(--border);
   overflow: hidden;
   border-radius: 2px;
+  flex-wrap: nowrap;
 }
 
 .cur-tab {
@@ -132,11 +133,12 @@ nav.scrolled {
   font-family: 'DM Sans', sans-serif;
   font-size: 11px;
   font-weight: 400;
-  letter-spacing: 0.08em;
-  padding: 6px 11px;
+  letter-spacing: 0.06em;
+  padding: 6px 9px;
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .cur-tab:last-child { border-right: none; }
 .cur-tab:hover { color: var(--gold); background: rgba(201,168,76,0.06); }
@@ -1473,23 +1475,18 @@ footer {
    IN-MODAL CURRENCY BAR — fully responsive
    6 currencies: USD GBP EUR CAD AUD BTC
 ════════════════════════════════════════ */
+/* ════════════════════════════════════════
+   IN-MODAL CURRENCY BAR — fully responsive
+   6 currencies always visible, never hidden
+════════════════════════════════════════ */
 .modal-currency-bar {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 10px 14px;
+  padding: 10px 12px;
   background: rgba(201,168,76,0.04);
   border: 1px solid var(--border);
   margin-bottom: 16px;
-}
-
-/* On wider modals, show label + tabs on same row */
-@media (min-width: 480px) {
-  .modal-currency-bar {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .modal-currency-label {
@@ -1497,49 +1494,91 @@ footer {
   letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--muted);
-  white-space: nowrap;
-  flex-shrink: 0;
 }
 
+/* Currency buttons — always a 3×2 grid on smallest screens,
+   scales to single row as space allows */
 .modal-currency-tabs {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   border: 1px solid var(--border);
   border-radius: 2px;
   overflow: hidden;
   width: 100%;
 }
 
-@media (min-width: 480px) {
+/* 360px+ : still 3 cols but taller touch targets */
+@media (min-width: 360px) {
   .modal-currency-tabs {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* 480px+ : all 6 in one row */
+@media (min-width: 480px) {
+  .modal-currency-bar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modal-currency-tabs {
+    grid-template-columns: repeat(6, 1fr);
     width: auto;
-    display: flex;
+    flex: 1;
   }
 }
 
 .modal-cur {
   background: transparent;
   border: none;
+  /* right border between columns */
   border-right: 1px solid var(--border);
+  /* bottom border between rows (3×2 grid) */
+  border-bottom: 1px solid var(--border);
   color: var(--muted);
   font-family: 'DM Sans', sans-serif;
   font-size: 11px;
   font-weight: 400;
-  letter-spacing: 0.04em;
-  padding: 7px 4px;
+  letter-spacing: 0.03em;
+  padding: 9px 4px;
   cursor: pointer;
   transition: all 0.2s;
-  white-space: nowrap;
   text-align: center;
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
+/* Remove bottom border on last row (4th, 5th, 6th buttons) */
+.modal-cur:nth-child(4),
+.modal-cur:nth-child(5),
+.modal-cur:nth-child(6) {
+  border-bottom: none;
+}
+
+/* Remove right border on every 3rd button (end of each row) */
+.modal-cur:nth-child(3n) {
+  border-right: none;
+}
+
+/* On single-row layout, restore right borders and remove bottom */
 @media (min-width: 480px) {
-  .modal-cur { padding: 6px 10px; letter-spacing: 0.06em; }
+  .modal-cur {
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+    padding: 7px 8px;
+    letter-spacing: 0.05em;
+  }
+  .modal-cur:nth-child(3n) {
+    border-right: 1px solid var(--border);
+  }
+  .modal-cur:last-child {
+    border-right: none;
+  }
 }
 
-.modal-cur:last-child { border-right: none; }
-.modal-cur:hover { color: var(--gold); background: rgba(201,168,76,0.06); }
+.modal-cur:hover  { color: var(--gold);  background: rgba(201,168,76,0.06); }
 .modal-cur.active { background: rgba(201,168,76,0.15); color: var(--gold); }
 .modal-cur[data-cur="BTC"].active { background: rgba(247,147,26,0.12); color: #F7931A; }
 
@@ -1820,16 +1859,30 @@ footer {
 
 /* Small mobile adjustments */
 @media (max-width: 480px) {
-  /* modal-cur handled by grid above */
+  /* Currency bar handled by 3×2 grid above */
   .card-type { min-width: 0; flex: 1; padding: 8px 4px; }
   .card-type-selector { gap: 6px; }
   .failed-screen { padding: 28px 20px 32px; }
-  .modal-body, .modal-header { padding: 18px; }
+  .modal-header { padding: 16px 16px 14px; }
+  .modal-body  { padding: 16px 16px 24px; }
+  .modal-title { font-size: 22px; }
   .swal-bank-row { flex-direction: column; align-items: flex-start; gap: 4px; }
   .swal-bank-val { text-align: left; }
-  .order-summary { padding: 14px; }
+  .order-summary { padding: 12px; }
   .bank-row { flex-direction: column; align-items: flex-start; gap: 4px; }
   .bank-val { text-align: left; }
+  /* Tighter form rows on tiny screens */
+  .form-row { gap: 10px; margin-bottom: 10px; }
+  .field input, .field select, .field textarea { padding: 10px 12px; font-size: 13px; }
+}
+
+/* Very small phones (< 360px) */
+@media (max-width: 360px) {
+  .modal-cur { font-size: 10px; padding: 8px 2px; letter-spacing: 0; }
+  .modal-currency-label { font-size: 9px; letter-spacing: 0.15em; }
+  .pay-method { font-size: 10px; padding: 8px 4px; }
+  .modal-header { padding: 14px; }
+  .modal-body  { padding: 14px 14px 20px; }
 }
 
 /* ════════════════════════════════════════

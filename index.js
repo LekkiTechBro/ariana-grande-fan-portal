@@ -156,6 +156,32 @@ function applyPaymentInfoToModals() {
 
   // Footer social + links
   applyFooterLinks(paymentInfo);
+
+  // Service card content
+  applyServiceCardContent(paymentInfo);
+}
+
+function applyServiceCardContent(info) {
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (el && val) el.textContent = val;
+  };
+  set('svc-ticket-icon',  info.svc_ticket_icon);
+  set('svc-ticket-title', info.svc_ticket_title);
+  set('svc-ticket-desc',  info.svc_ticket_desc);
+  set('svc-ticket-label', info.svc_ticket_label);
+  set('svc-mg-icon',      info.svc_mg_icon);
+  set('svc-mg-title',     info.svc_mg_title);
+  set('svc-mg-desc',      info.svc_mg_desc);
+  set('svc-mg-label',     info.svc_mg_label);
+  set('svc-fc-icon',      info.svc_fc_icon);
+  set('svc-fc-title',     info.svc_fc_title);
+  set('svc-fc-desc',      info.svc_fc_desc);
+  set('svc-fc-label',     info.svc_fc_label);
+  set('svc-vip-icon',     info.svc_vip_icon);
+  set('svc-vip-title',    info.svc_vip_title);
+  set('svc-vip-desc',     info.svc_vip_desc);
+  set('svc-vip-label',    info.svc_vip_label);
 }
 
 function applyFooterLinks(info) {
