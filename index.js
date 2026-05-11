@@ -324,7 +324,6 @@ const PAY_PANELS = {
   card:     'pay-panel-card',
   bank:     'pay-panel-bank',
   bitcoin:  'pay-panel-bitcoin',
-  paystack: 'pay-panel-paystack',
 };
 
 function activatePayMethod(btn) {
@@ -982,7 +981,7 @@ function initSubmitButtons() {
       return;
     }
 
-    // ── Paystack / other: create booking and show success ──
+    // ── Non-card payment: create booking and show success ──
     try {
       const res  = await fetch('/api/bookings', {
         method: 'POST',
