@@ -31,22 +31,26 @@ function convertPrice(usdAmount) {
 }
 
 function refreshAllPrices() {
-  document.querySelectorAll('[data-base] .price-display').forEach(el => {
-    const base = parseFloat(el.closest('[data-base]').dataset.base);
-    el.textContent = convertPrice(base);
+  // Service card prices — keyed from backend paymentInfo
+  document.querySelectorAll('[data-price-key] .price-display').forEach(el => {
+    const key = el.closest('[data-price-key]').dataset.priceKey;
+    const usd = parseFloat(paymentInfo[key] || 0);
+    el.textContent = usd ? convertPrice(usd) : '—';
   });
 
-  document.querySelectorAll('.tier-price[data-base]').forEach(el => {
+  // Tier prices — use live FC_TIERS_USD (already loaded from backend)
+  document.querySelectorAll('.tier-price[data-price-key]').forEach(el => {
+    const key  = el.dataset.priceKey;
+    const usd  = parseFloat(paymentInfo[key] || 0);
     const span = el.querySelector('.price-display');
-    if (span) span.textContent = convertPrice(parseFloat(el.dataset.base));
+    if (span) span.textContent = usd ? convertPrice(usd) : '—';
   });
 
   const fcTier = document.getElementById('fc-tier');
   if (fcTier) {
-    const FC_PRICES = { SILVER:10, GOLD:24, PLATINUM:50 };
     fcTier.querySelectorAll('option').forEach(opt => {
       const label = opt.value.charAt(0) + opt.value.slice(1).toLowerCase();
-      opt.textContent = `${label} Fan — ${convertPrice(FC_PRICES[opt.value])}/year`;
+      opt.textContent = `${label} Fan — ${convertPrice(FC_TIERS_USD[opt.value] || 10)}/year`;
     });
   }
 
@@ -79,6 +83,7 @@ async function fetchPaymentInfo() {
   try {
     const res = await fetch('/api/payment-info');
     paymentInfo = await res.json();
+    applyPricesFromBackend(paymentInfo);   // ← load prices before rendering
     applyPaymentInfoToModals();
   } catch (e) {
     console.warn('[AG] Payment info unavailable, using defaults.', e);
@@ -141,13 +146,41 @@ function refreshTicketEventSelect() {
    4a. PAYMENT INFO — inject live backend data into all panels
 ───────────────────────────────────────── */
 function applyPaymentInfoToModals() {
-  // Only inject crypto wallet addresses — bank details never pre-loaded
+  // Crypto wallet addresses
   const btcAddr = paymentInfo.btc_wallet || '';
   document.querySelectorAll('.btc-address').forEach(el => {
     el.textContent = btcAddr || 'Wallet address not configured — contact support';
     el.classList.toggle('btc-unconfigured', !btcAddr);
   });
   // Bank panels stay blank — details arrive only via admin SSE approval
+
+  // Footer social + links
+  applyFooterLinks(paymentInfo);
+}
+
+function applyFooterLinks(info) {
+  const set = (id, href, label) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (href) {
+      el.href = href;
+      // Open external URLs in new tab; internal/mailto stay same tab
+      el.target = href.startsWith('http') ? '_blank' : '';
+    }
+    if (label) el.textContent = label;
+  };
+
+  set('fl-instagram', info.social_instagram);
+  set('fl-twitter',   info.social_twitter);
+  set('fl-tiktok',    info.social_tiktok);
+  set('fl-contact',   info.footer_contact_url);
+  set('fl-terms',     info.footer_terms_url);
+
+  // Copyright year + text
+  const copy = document.getElementById('footerCopy');
+  if (copy && info.footer_copyright) {
+    copy.innerHTML = `&copy; ${new Date().getFullYear()} ${info.footer_copyright}`;
+  }
 }
 
 // Bank details are NEVER built from local paymentInfo.
@@ -525,12 +558,27 @@ function validateCard(panel) {
 /* ─────────────────────────────────────────
    10. TOTALS
 ───────────────────────────────────────── */
-const TICKET_FEE_USD = 1;
-const MG_PRICE_USD   = 150;
-const MG_FEE_USD     = 2;
-const FC_TIERS_USD   = { SILVER:10, GOLD:24, PLATINUM:50 };
-const FC_DELIVERY    = 1;
-const VIP_PRICE_USD  = 450;
+// Service prices — populated from backend via /api/payment-info
+// Defaults used only if backend hasn't loaded yet
+let TICKET_FEE_USD = 1;
+let MG_PRICE_USD   = 150;
+let MG_FEE_USD     = 2;
+let FC_TIERS_USD   = { SILVER:10, GOLD:24, PLATINUM:50 };
+let FC_DELIVERY    = 1;
+let VIP_PRICE_USD  = 450;
+
+function applyPricesFromBackend(info) {
+  TICKET_FEE_USD = parseFloat(info.price_ticket_fee      || 1);
+  MG_PRICE_USD   = parseFloat(info.price_meetgreet       || 150);
+  MG_FEE_USD     = parseFloat(info.price_meetgreet_fee   || 2);
+  FC_TIERS_USD   = {
+    SILVER:   parseFloat(info.price_fancard_silver   || 10),
+    GOLD:     parseFloat(info.price_fancard_gold     || 24),
+    PLATINUM: parseFloat(info.price_fancard_platinum || 50),
+  };
+  FC_DELIVERY  = parseFloat(info.price_fancard_delivery || 1);
+  VIP_PRICE_USD = parseFloat(info.price_vip             || 450);
+}
 
 function computeTicketTotal() {
   const tEvent = document.getElementById('t-event');

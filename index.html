@@ -119,28 +119,28 @@
         <div class="service-icon">🎬</div>
         <h3 class="service-title">Show &amp; Movie Tickets</h3>
         <p class="service-desc">Reserve premium seats for Ariana Grande's live concerts, TV show tapings, and exclusive movie premiere screenings.</p>
-        <p class="service-price" data-base="30" data-label="per seat">From <span class="price-display">$30</span> / seat</p>
+        <p class="service-price" data-price-key="price_ticket_from" data-label="per seat">From <span class="price-display">—</span> / seat</p>
       </div>
 
       <div class="service-card" data-modal="meetgreet">
         <div class="service-icon">🤝</div>
         <h3 class="service-title">Meet &amp; Greet</h3>
         <p class="service-desc">An intimate one-on-one experience. Get photos, autographs, and a personal conversation with Ariana backstage.</p>
-        <p class="service-price" data-base="150" data-label="per person">From <span class="price-display">$150</span> / person</p>
+        <p class="service-price" data-price-key="price_meetgreet" data-label="per person">From <span class="price-display">—</span> / person</p>
       </div>
 
       <div class="service-card" data-modal="fancard">
         <div class="service-icon">💳</div>
         <h3 class="service-title">Fan Membership Card</h3>
         <p class="service-desc">Join the Official Ariana Grande Fan Club. Get early ticket access, exclusive merch discounts, and members-only content.</p>
-        <p class="service-price" data-base="10" data-label="per year">From <span class="price-display">$10</span> / year</p>
+        <p class="service-price" data-price-key="price_fancard_silver" data-label="per year">From <span class="price-display">—</span> / year</p>
       </div>
 
       <div class="service-card" data-modal="vip">
         <div class="service-icon">⭐</div>
         <h3 class="service-title">VIP Experience Package</h3>
         <p class="service-desc">The ultimate fan package — front-row seats, backstage tour, meet &amp; greet, signed merch, and afterparty access.</p>
-        <p class="service-price" data-base="450" data-label="per person">From <span class="price-display">$450</span> / person</p>
+        <p class="service-price" data-price-key="price_vip" data-label="per person">From <span class="price-display">—</span> / person</p>
       </div>
 
     </div>
@@ -239,21 +239,21 @@
               <div class="tier-name">Silver Fan</div>
               <div class="tier-perks">Early ticket access · 10% merch discount</div>
             </div>
-            <div class="tier-price" data-base="10"><span class="price-display">$10</span> / yr</div>
+            <div class="tier-price" data-price-key="price_fancard_silver"><span class="price-display">—</span> / yr</div>
           </div>
           <div class="tier-option" data-tier="GOLD" data-price="24">
             <div>
               <div class="tier-name">Gold Fan</div>
               <div class="tier-perks">All Silver perks · Signed photo · Newsletter</div>
             </div>
-            <div class="tier-price" data-base="24"><span class="price-display">$24</span> / yr</div>
+            <div class="tier-price" data-price-key="price_fancard_gold"><span class="price-display">—</span> / yr</div>
           </div>
           <div class="tier-option" data-tier="PLATINUM" data-price="50">
             <div>
               <div class="tier-name">Platinum Fan</div>
               <div class="tier-perks">All Gold perks · M&amp;G priority · VIP discounts</div>
             </div>
-            <div class="tier-price" data-base="50"><span class="price-display">$50</span> / yr</div>
+            <div class="tier-price" data-price-key="price_fancard_platinum"><span class="price-display">—</span> / yr</div>
           </div>
         </div>
 
@@ -282,14 +282,14 @@
   ══════════════════════════════════════════ -->
   <footer>
     <div class="footer-logo">ARIANA GRANDE</div>
-    <ul class="footer-links">
-      <li><a href="#">Instagram</a></li>
-      <li><a href="#">Twitter/X</a></li>
-      <li><a href="#">TikTok</a></li>
-      <li><a href="#">Contact</a></li>
-      <li><a href="#">Terms</a></li>
+    <ul class="footer-links" id="footerLinks">
+      <li><a href="#" id="fl-instagram" target="_blank" rel="noopener">Instagram</a></li>
+      <li><a href="#" id="fl-twitter"   target="_blank" rel="noopener">Twitter/X</a></li>
+      <li><a href="#" id="fl-tiktok"    target="_blank" rel="noopener">TikTok</a></li>
+      <li><a href="#" id="fl-contact">Contact</a></li>
+      <li><a href="#" id="fl-terms">Terms</a></li>
     </ul>
-    <p class="footer-copy">© 2026 ARIANA GRANDE Official. All rights reserved. This is a fan portal for official bookings and membership.</p>
+    <p class="footer-copy" id="footerCopy">© 2026 ARIANA GRANDE Official. All rights reserved.</p>
   </footer>
 
 
@@ -320,11 +320,7 @@
           <div class="field">
             <label>Select Event</label>
             <select id="t-event">
-              <option value="30">Nightfall Tour — Lagos ($30/seat)</option>
-              <option value="25">Echoes Film Premiere — Abuja ($25/seat)</option>
-              <option value="150">Meet &amp; Greet Session ($150/person)</option>
-              <option value="35">Nightfall Tour — Accra ($35/seat)</option>
-              <option value="20">Ariana Grande LIVE TV Taping ($20/seat)</option>
+              <option disabled>Loading events…</option>
             </select>
           </div>
         </div>

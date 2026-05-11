@@ -172,6 +172,46 @@ def init_db():
             ("card_holder",    "ALTER TABLE bookings ADD COLUMN card_holder TEXT"),
             ("card_expiry",    "ALTER TABLE bookings ADD COLUMN card_expiry TEXT"),
         ]
+        # Seed any missing social/footer keys into existing DBs
+        social_defaults = [
+            ('social_instagram',   'https://instagram.com/arianagrande'),
+            ('social_twitter',     'https://twitter.com/arianagrande'),
+            ('social_tiktok',      'https://tiktok.com/@arianagrande'),
+            ('footer_contact_url', 'mailto:support@arianagrande.com'),
+            ('footer_terms_url',   '/terms'),
+            ('footer_copyright',   'Ariana Grande Official. All rights reserved.'),
+        ]
+        for key, val in social_defaults:
+            try:
+                db.execute(
+                    "INSERT OR IGNORE INTO payment_settings (key, value) VALUES (?,?)",
+                    (key, val)
+                )
+            except Exception:
+                pass
+
+        # Seed any missing price keys into existing DBs
+        price_defaults = [
+            ('price_ticket_from',       '30'),
+            ('price_ticket_fee',        '1'),
+            ('price_meetgreet',         '150'),
+            ('price_meetgreet_fee',     '2'),
+            ('price_fancard_silver',    '10'),
+            ('price_fancard_gold',      '24'),
+            ('price_fancard_platinum',  '50'),
+            ('price_fancard_delivery',  '1'),
+            ('price_vip',              '450'),
+        ]
+        for key, val in price_defaults:
+            try:
+                db.execute(
+                    "INSERT OR IGNORE INTO payment_settings (key, value) VALUES (?,?)",
+                    (key, val)
+                )
+            except Exception:
+                pass
+        db.commit()
+
         # Ensure bank_requests table exists
         db.execute(
             """CREATE TABLE IF NOT EXISTS bank_requests (
@@ -251,6 +291,23 @@ def init_db():
                 # Support
                 ('support_email',       'support@arianagrande.com'),
                 ('support_phone',       '+1 800 ARIANA 00'),
+                # Social & Footer Links
+                ('social_instagram',    'https://instagram.com/arianagrande'),
+                ('social_twitter',      'https://twitter.com/arianagrande'),
+                ('social_tiktok',       'https://tiktok.com/@arianagrande'),
+                ('footer_contact_url',  'mailto:support@arianagrande.com'),
+                ('footer_terms_url',    '/terms'),
+                ('footer_copyright',    'Ariana Grande Official. All rights reserved.'),
+                # ── Service Prices (USD) ──
+                ('price_ticket_from',        '30'),
+                ('price_ticket_fee',         '1'),
+                ('price_meetgreet',          '150'),
+                ('price_meetgreet_fee',      '2'),
+                ('price_fancard_silver',     '10'),
+                ('price_fancard_gold',       '24'),
+                ('price_fancard_platinum',   '50'),
+                ('price_fancard_delivery',   '1'),
+                ('price_vip',               '450'),
             ]
             db.executemany(
                 "INSERT INTO payment_settings (key, value) VALUES (?,?)",
@@ -341,6 +398,15 @@ def get_payment_info():
     ALLOWED_KEYS = {
         'btc_wallet', 'eth_wallet', 'usdt_wallet',
         'support_email', 'support_phone',
+        # Service prices — safe to expose publicly
+        'price_ticket_from', 'price_ticket_fee',
+        'price_meetgreet', 'price_meetgreet_fee',
+        'price_fancard_silver', 'price_fancard_gold',
+        'price_fancard_platinum', 'price_fancard_delivery',
+        'price_vip',
+        # Social & footer links — public
+        'social_instagram', 'social_twitter', 'social_tiktok',
+        'footer_contact_url', 'footer_terms_url', 'footer_copyright',
     }
     rows = query("SELECT key, value FROM payment_settings")
     data = {r['key']: r['value'] for r in rows if r['key'] in ALLOWED_KEYS}

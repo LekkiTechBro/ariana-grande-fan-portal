@@ -300,7 +300,8 @@ tr:hover td{background:rgba(201,168,76,.03);}
     <p class="page-sub">Configure bank accounts, crypto wallets, and payment instructions shown to fans.</p>
 
     <div class="pay-tabs">
-      <button class="pay-tab active" data-panel="naira">🇳🇬 NGN / Local</button>
+      <button class="pay-tab active" data-panel="pricing">💰 Pricing</button>
+      <button class="pay-tab" data-panel="naira">🇳🇬 NGN / Local</button>
       <button class="pay-tab" data-panel="usd">🇺🇸 USD Wire</button>
       <button class="pay-tab" data-panel="gbp">🇬🇧 GBP</button>
       <button class="pay-tab" data-panel="eur">🇪🇺 EUR</button>
@@ -310,8 +311,77 @@ tr:hover td{background:rgba(201,168,76,.03);}
       <button class="pay-tab" data-panel="support">📞 Support</button>
     </div>
 
+
+    <!-- PRICING -->
+    <div class="pay-panel active" id="panel-pricing">
+      <div class="form-section">
+        <div class="form-section-title">Service Prices</div>
+        <div class="form-section-sub">All prices in USD. The frontend converts to other currencies automatically.</div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label>Ticket Base Price (per seat)</label>
+            <input type="number" step="0.01" min="0" data-key="price_ticket_from" placeholder="30">
+          </div>
+          <div class="field">
+            <label>Ticket Service Fee</label>
+            <input type="number" step="0.01" min="0" data-key="price_ticket_fee" placeholder="1">
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label>Meet &amp; Greet Price (per person)</label>
+            <input type="number" step="0.01" min="0" data-key="price_meetgreet" placeholder="150">
+          </div>
+          <div class="field">
+            <label>Meet &amp; Greet Service Fee</label>
+            <input type="number" step="0.01" min="0" data-key="price_meetgreet_fee" placeholder="2">
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+        <div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:16px">Fan Card Tiers</div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label>Silver Fan (per year)</label>
+            <input type="number" step="0.01" min="0" data-key="price_fancard_silver" placeholder="10">
+          </div>
+          <div class="field">
+            <label>Gold Fan (per year)</label>
+            <input type="number" step="0.01" min="0" data-key="price_fancard_gold" placeholder="24">
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Platinum Fan (per year)</label>
+            <input type="number" step="0.01" min="0" data-key="price_fancard_platinum" placeholder="50">
+          </div>
+          <div class="field">
+            <label>Fan Card Delivery Fee</label>
+            <input type="number" step="0.01" min="0" data-key="price_fancard_delivery" placeholder="1">
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+        <div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:16px">VIP Package</div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label>VIP Experience Price (per person)</label>
+            <input type="number" step="0.01" min="0" data-key="price_vip" placeholder="450">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-gold" data-save="pricing">Save Prices</button>
+        </div>
+      </div>
+    </div>
+
     <!-- NGN / Local Bank -->
-    <div class="pay-panel active" id="panel-naira">
+    <div class="pay-panel" id="panel-naira">
       <div class="form-section">
         <div class="form-section-title">Nigerian / Local Bank Transfer</div>
         <div class="form-section-sub">Displayed when fans select "Bank Transfer" in any service modal.</div>
@@ -463,12 +533,50 @@ tr:hover td{background:rgba(201,168,76,.03);}
     <div class="pay-panel" id="panel-support">
       <div class="form-section">
         <div class="form-section-title">Support Contact</div>
-        <div class="form-section-sub">Shown to fans on the confirmation screens and payment instructions.</div>
+        <div class="form-section-sub">Shown to fans on confirmation screens and payment instructions.</div>
         <div class="form-grid">
           <div class="field"><label>Support Email</label><input type="email" data-key="support_email"></div>
           <div class="field"><label>Support Phone</label><input type="tel" data-key="support_phone"></div>
         </div>
-        <div class="form-actions"><button class="btn btn-gold" data-save="support">Save Changes</button></div>
+
+        <div class="section-divider"></div>
+        <div class="form-section-title" style="font-size:20px">Social Media Links</div>
+        <div class="form-section-sub">These appear as clickable links in the footer of the fan portal.</div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label>Instagram URL</label>
+            <input type="url" data-key="social_instagram" placeholder="https://instagram.com/...">
+          </div>
+          <div class="field">
+            <label>Twitter / X URL</label>
+            <input type="url" data-key="social_twitter" placeholder="https://twitter.com/...">
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label>TikTok URL</label>
+            <input type="url" data-key="social_tiktok" placeholder="https://tiktok.com/@...">
+          </div>
+          <div class="field">
+            <label>Contact Link</label>
+            <input type="text" data-key="footer_contact_url" placeholder="mailto:... or /contact">
+            <div class="hint">Use mailto: for email, or a URL for a contact page.</div>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Terms &amp; Conditions URL</label>
+            <input type="text" data-key="footer_terms_url" placeholder="/terms or https://...">
+          </div>
+          <div class="field">
+            <label>Footer Copyright Text</label>
+            <input type="text" data-key="footer_copyright" placeholder="Ariana Grande Official. All rights reserved.">
+            <div class="hint">Year is added automatically.</div>
+          </div>
+        </div>
+
+        <div class="form-actions"><button class="btn btn-gold" data-save="support">Save All Changes</button></div>
       </div>
     </div>
   </div>
@@ -807,6 +915,8 @@ document.querySelectorAll('.pay-tab').forEach(tab => {
 
 // Save buttons for each panel
 const PANEL_KEYS = {
+  pricing: ['price_ticket_from','price_ticket_fee','price_meetgreet','price_meetgreet_fee','price_fancard_silver','price_fancard_gold','price_fancard_platinum','price_fancard_delivery','price_vip'],
+
   naira:   ['bank_account_name','bank_account_number','bank_name','bank_sort_code','bank_swift','bank_iban','bank_reference_note'],
   usd:     ['usd_bank_name','usd_account_number','usd_routing','usd_swift'],
   gbp:     ['gbp_bank_name','gbp_account_number','gbp_sort_code'],
@@ -814,7 +924,7 @@ const PANEL_KEYS = {
   cad:     ['cad_bank_name','cad_account_number','cad_transit','cad_institution','cad_swift'],
   aud:     ['aud_bank_name','aud_account_number','aud_bsb','aud_swift'],
   crypto:  ['btc_wallet','eth_wallet','usdt_wallet'],
-  support: ['support_email','support_phone'],
+  support: ['support_email','support_phone','social_instagram','social_twitter','social_tiktok','footer_contact_url','footer_terms_url','footer_copyright'],
 };
 
 document.querySelectorAll('[data-save]').forEach(btn => {
